@@ -12,15 +12,15 @@ import { NextResponse } from 'next/server';
 
 async function getStudentData(limit = 4) {
     try {
-            // const limit =parseInt(request.nextUrl.searchParams.get('limit')) || 4;
-            const client = await clientPromise;
-            const db = client.db("LibraLink");
-            const collection = db.collection('Student');
-            const documents = await collection.find({}).sort({ _id: -1 }).limit(limit).toArray();
-            return NextResponse.json({ data: documents }).json();
-        } catch (e) {
-            throw new Error('Failed to fetch data');
-        }
+        // const limit =parseInt(request.nextUrl.searchParams.get('limit')) || 4;
+        const client = await clientPromise;
+        const db = client.db("LibraLink");
+        const collection = db.collection('Student');
+        const documents = await collection.find({}).sort({ _id: -1 }).limit(limit).toArray();
+        return NextResponse.json({ data: documents }).json();
+    } catch (e) {
+        throw new Error('Failed to fetch data');
+    }
 }
 async function getBookData(limit = 4) {
     try {
@@ -36,7 +36,14 @@ async function getBookData(limit = 4) {
 }
 
 const Dashboard = async () => {
-    const baseUrl = "https://" + process.env.VERCEL_URL || "http://localhost:3000";
+    // const baseUrl = ("https://" + process.env.VERCEL_URL) || "http://localhost:3000";
+    let baseUrl = "";
+    if (process.env.VERCEL_URL) {
+        baseUrl = "https://" + process.env.VERCEL_URL;
+    } else {
+        // Set a fallback URL if VERCEL_URL is undefined
+        baseUrl = "http://localhost:3000";
+    }
     console.log(baseUrl);
     // var day =new Date();
     const currentDate = new Date();

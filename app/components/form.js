@@ -17,8 +17,9 @@ const AddForm = ({ itemTitle, apiPostPath, name , title }) => {
                 },
                 body: JSON.stringify(data),
             });
+            console.log(response);
 
-            if (response.acknowledged) {
+            if (response.ok) {
                 console.log("Form submitted successfully");
                 e.target.reset();
                 setSuccess(true);
@@ -39,7 +40,7 @@ const AddForm = ({ itemTitle, apiPostPath, name , title }) => {
         <h1 className="p-4 text-center">{title}</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             {itemTitle && Object.keys(itemTitle).map(y => (
-                <div className="flex items-center">
+                <div className="flex items-center" key={y}>
                     <label htmlFor={itemTitle[y].alise}>{itemTitle[y].icon}</label>
                     <input
                         className="focus:outline-none rounded-md dark:bg-[#353334] w-40 px-2 mx-2"
