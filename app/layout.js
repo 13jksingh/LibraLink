@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en" className={isDarkMode ? 'dark' : ''}>
-      <body className={`dark:bg-[#353334] dark:text-white ${inter.className}`}>
+      <body className={`dark:bg-[#353334] dark:text-white ${inter.className}`} suppressHydrationWarning={true}>
         <Navbar toggleDarkMode={toggleDarkMode} />
         <div className="flex">
           <Sidebar segment={segment} />
