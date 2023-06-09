@@ -1,3 +1,4 @@
+// https://libra-link-lhkmfxjze-13jksingh.vercel.app/
 import Card from "../components/card";
 import { HiOutlineUsers } from "react-icons/hi"
 import { GiSandsOfTime } from "react-icons/gi"
@@ -10,16 +11,24 @@ import clientPromise from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
 
 async function getStudentData(limit = 4) {
-    try {
-        // const limit =parseInt(request.nextUrl.searchParams.get('limit')) || 4;
-        const client = await clientPromise;
-        const db = client.db("LibraLink");
-        const collection = db.collection('Student');
-        const documents = await collection.find({}).sort({ _id: -1 }).limit(limit).toArray();
-        return NextResponse.json({ data: documents }).json();
-    } catch (e) {
-        throw new Error('Failed to fetch data');
+    const env = process.env.NODE_ENV
+    let baseURL;
+    if (env == "development") {
+        baseURL = "http://localhost:3000";
     }
+    else if (env == "production") {
+        baseURL = "https://libra-link-lhkmfxjze-13jksingh.vercel.app";
+    }
+    try {
+            // const limit =parseInt(request.nextUrl.searchParams.get('limit')) || 4;
+            const client = await clientPromise;
+            const db = client.db("LibraLink");
+            const collection = db.collection('Student');
+            const documents = await collection.find({}).sort({ _id: -1 }).limit(limit).toArray();
+            return NextResponse.json({ data: documents }).json();
+        } catch (e) {
+            throw new Error('Failed to fetch data');
+        }
 }
 async function getBookData(limit = 4) {
     try {
@@ -60,8 +69,8 @@ const Dashboard = async () => {
                 <Card count="60" title="New Members" icon={<AiOutlineUserAdd />} />
             </div>
             <div className="flex gap-5">
-                <Card title="Students" listItems buttonTitle="Add New Student" items={studentData} itemTitle={studentDataTitles} apiPostPath="http://localhost:3000/api/student" action />
-                <Card title="Books" listItems buttonTitle="Add New Book" items={bookData} itemTitle={bookDataTitles} apiPostPath="http://localhost:3000/api/book" action />
+                <Card title="Students" listItems buttonTitle="Add New Student" items={studentData} itemTitle={studentDataTitles} apiPostPath={`${baseURL}/api/student`} action />
+                <Card title="Books" listItems buttonTitle="Add New Book" items={bookData} itemTitle={bookDataTitles} apiPostPath={`${baseURL}/api/book`} action />
             </div>
             <div className="my-7">
                 <Card title="Overdue Book List" listItems />
