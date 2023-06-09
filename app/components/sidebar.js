@@ -3,8 +3,17 @@ import { FiBookOpen, FiSettings } from "react-icons/fi";
 import { HiOutlineUsers } from "react-icons/hi";
 import { GoSignOut } from "react-icons/go";
 
-const Sidebar = () => {
-  const active = 1;
+const Sidebar = ({segment}) => {
+  let active;
+  if (segment==="dashboard"){
+    active = 1;
+  }else if (segment==="book"){
+    active=2;
+  }else if (segment==="student"){
+    active=3;
+  }else if (segment==="setting"){
+    active=4;
+  }
 
   const getLinkClass = (index) => {
     let linkClass = "rounded-md p-2";
@@ -19,13 +28,13 @@ const Sidebar = () => {
       <a href="/dashboard" className={getLinkClass(1)}>
         <MdOutlineSpaceDashboard />
       </a>
-      <a href="/dashboard" className={getLinkClass(2)}>
+      <a href="/book" className={getLinkClass(2)}>
         <FiBookOpen />
       </a>
-      <a href="/dashboard" className={getLinkClass(3)}>
+      <a href="/student" className={getLinkClass(3)}>
         <HiOutlineUsers />
       </a>
-      <a href="/dashboard" className={getLinkClass(4)}>
+      <a href="/setting" className={getLinkClass(4)}>
         <FiSettings />
       </a>
       <a href="/dashboard" className={getLinkClass(5)}>

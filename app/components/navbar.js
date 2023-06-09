@@ -19,7 +19,7 @@ const Navbar = ({ toggleDarkMode }) => {
             <div>
                 <input type="text" className="hidden text-xl md:block rounded-xl bg-[#F8F8F8] px-4 w-[400px] py-2 text-slate-950 focus:outline-none" placeholder="Search ..." />
             </div>
-            <div class="flex gap-3 items-center">
+            <div className="flex gap-3 items-center">
                 <button onClick={handleDarkModeToggle}>
                     <div className="hover:bg-slate-400 transition rounded-md p-2">
                         {darkMode ? <CiLight /> : <MdDarkMode />}

@@ -29,13 +29,14 @@ export default function RootLayout({ children }) {
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
   };
+  const {props:{childProp:{segment}}} = children;
 
   return (
     <html lang="en" className={isDarkMode ? 'dark' : ''}>
       <body className={`dark:bg-[#353334] dark:text-white ${inter.className}`}>
         <Navbar toggleDarkMode={toggleDarkMode} />
         <div className="flex">
-          <Sidebar />
+          <Sidebar segment={segment} />
           <div className="dark:bg-[#201C1D] bg-[#F9F9F9] rounded-tl-3xl w-screen px-10 py-20">
             {children}
           </div>
