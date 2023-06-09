@@ -11,14 +11,6 @@ import clientPromise from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
 
 async function getStudentData(limit = 4) {
-    const env = process.env.NODE_ENV
-    let baseURL;
-    if (env == "development") {
-        baseURL = "http://localhost:3000";
-    }
-    else if (env == "production") {
-        baseURL = "https://libra-link-lhkmfxjze-13jksingh.vercel.app";
-    }
     try {
             // const limit =parseInt(request.nextUrl.searchParams.get('limit')) || 4;
             const client = await clientPromise;
@@ -44,6 +36,7 @@ async function getBookData(limit = 4) {
 }
 
 const Dashboard = async () => {
+    const baseUrl = process.env.VERCEL_URL || "http://localhost:3000";
     // var day =new Date();
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -69,8 +62,8 @@ const Dashboard = async () => {
                 <Card count="60" title="New Members" icon={<AiOutlineUserAdd />} />
             </div>
             <div className="flex gap-5">
-                <Card title="Students" listItems buttonTitle="Add New Student" items={studentData} itemTitle={studentDataTitles} apiPostPath={`${baseURL}/api/student`} action />
-                <Card title="Books" listItems buttonTitle="Add New Book" items={bookData} itemTitle={bookDataTitles} apiPostPath={`${baseURL}/api/book`} action />
+                <Card title="Students" listItems buttonTitle="Add New Student" items={studentData} itemTitle={studentDataTitles} apiPostPath={`${baseUrl}/api/student`} action />
+                <Card title="Books" listItems buttonTitle="Add New Book" items={bookData} itemTitle={bookDataTitles} apiPostPath={`${baseUrl}/api/book`} action />
             </div>
             <div className="my-7">
                 <Card title="Overdue Book List" listItems />
