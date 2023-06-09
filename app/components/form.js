@@ -18,7 +18,7 @@ const AddForm = ({ itemTitle, apiPostPath, name , title }) => {
                 body: JSON.stringify(data),
             });
 
-            if (response.ok) {
+            if (response.acknowledged) {
                 console.log("Form submitted successfully");
                 e.target.reset();
                 setSuccess(true);
