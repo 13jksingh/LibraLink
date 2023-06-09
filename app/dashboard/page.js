@@ -36,7 +36,7 @@ async function getBookData(limit = 4) {
 }
 
 const Dashboard = async () => {
-    const baseUrl = process.env.VERCEL_URL || "http://localhost:3000";
+    const baseUrl = "https://" + process.env.VERCEL_URL || "http://localhost:3000";
     // var day =new Date();
     const currentDate = new Date();
     const year = currentDate.getFullYear();
