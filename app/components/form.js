@@ -11,6 +11,7 @@ const AddForm = ({ itemTitle, apiPostPath, name , title }) => {
         try {
             const response = await fetch(apiPostPath, {
                 method: "POST",
+                mode: "no-cors",
                 headers: {
                     "Content-Type": "application/json",
                 },
