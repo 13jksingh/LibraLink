@@ -24,7 +24,7 @@ const Sidebar = ({segment}) => {
   };
 
   return (
-    <div className="h-screen sticky top-0 w-24 flex flex-col items-center gap-14 text-2xl py-8 text-[#7D7B7B]">
+    <div className="hidden h-screen sticky top-0 w-24 md:flex flex-col items-center gap-14 text-2xl py-8 text-[#7D7B7B]">
       <a href="/dashboard" className={getLinkClass(1)}>
         <MdOutlineSpaceDashboard />
       </a>

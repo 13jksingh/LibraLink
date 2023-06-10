@@ -29,10 +29,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={isDarkMode ? 'dark' : ''}>
       <body className={`dark:bg-[#353334] dark:text-white ${inter.className}`} suppressHydrationWarning={true}>
-        <Navbar toggleDarkMode={toggleDarkMode} />
+        <Navbar toggleDarkMode={toggleDarkMode} segment={segment} />
         <div className="flex">
           <Sidebar segment={segment} />
-          <div className="dark:bg-[#201C1D] bg-[#F9F9F9] rounded-tl-3xl w-screen px-10 py-20">
+          <div className="dark:bg-[#201C1D] bg-[#F9F9F9] md:rounded-tl-3xl w-screen px-10 py-20">
             {children}
           </div>
         </div>

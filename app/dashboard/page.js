@@ -44,7 +44,7 @@ const Dashboard = async () => {
         // Set a fallback URL if VERCEL_URL is undefined
         baseUrl = "http://localhost:3000";
     }
-    console.log(baseUrl);
+    // console.log(baseUrl);
     // var day =new Date();
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -63,20 +63,20 @@ const Dashboard = async () => {
         <div>
             <h1 className="text-3xl font-bold">Hey, <span className="text-[#F65867]">Jaskeerat!</span></h1>
             <h1 className="py-3 font-semibold">{month} {date}, {year} | {day}, {hours}:{minutes}</h1>
-            <div className="flex flex-row w-full justify-around items-center py-6 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-6">
                 <Card count="1223" title="Total Visitors" icon={<HiOutlineUsers />} />
                 <Card count="740" title="Borrowed Books" icon={<MdOutlineLibraryBooks />} />
                 <Card count="22" title="Overdue Books" icon={<GiSandsOfTime />} />
                 <Card count="60" title="New Members" icon={<AiOutlineUserAdd />} />
             </div>
-            <div className="flex gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Card title="Students" listItems buttonTitle="Add New Student" items={studentData} itemTitle={studentDataTitles} apiPostPath={`${baseUrl}/api/student`} action />
                 <Card title="Books" listItems buttonTitle="Add New Book" items={bookData} itemTitle={bookDataTitles} apiPostPath={`${baseUrl}/api/book`} action />
             </div>
-            <div className="my-7">
+            <div className="grid grid-cols-1 gap-4 my-6">
                 <Card title="Overdue Book List" listItems />
             </div>
-            <div className="my-7 flex gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Card title="Overdue Book List" listItems />
                 <Card title="Overdue Book List" listItems />
             </div>
