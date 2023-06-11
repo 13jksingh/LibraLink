@@ -26,9 +26,9 @@ const Card = (props) => {
                     )}
                 </div>
                 <div className="mt-6">
-                    <Table items={props.items} itemTitle={props.itemTitle} action={props.action} />
+                    <Table items={props.items} itemTitle={props.itemTitle} action={props.action} textSmall={props.textSmall} textLeft={props.textLeft} paddingReq={props.paddingReq} contrastBorder={props.contrastBorder} headingBgColor={props.headingBgColor} headingLight={props.headingLight} narrowColumns={props.narrowColumns}/>
                 </div>
-                <a href="" className="flex justify-end text-[#F65867] text-sm font-semibold">See More</a>
+                <a href={props.seeMore} className="flex justify-end text-[#F65867] text-sm font-semibold">See More</a>
             </div>
         )
     }

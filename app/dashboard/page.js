@@ -70,8 +70,8 @@ const Dashboard = async () => {
                 <Card count="60" title="New Members" icon={<AiOutlineUserAdd />} />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card title="Students" listItems buttonTitle="Add New Student" items={studentData} itemTitle={studentDataTitles} apiPostPath={`${baseUrl}/api/student`} action />
-                <Card title="Books" listItems buttonTitle="Add New Book" items={bookData} itemTitle={bookDataTitles} apiPostPath={`${baseUrl}/api/book`} action />
+                <Card title="Students" listItems buttonTitle="Add New Student" items={studentData} itemTitle={studentDataTitles} apiPostPath={`${baseUrl}/api/student`} action textSmall paddingReq="10px" contrastBorder headingLight seeMore="/student" narrowColumns={["ID"]} />
+                <Card title="Books" listItems buttonTitle="Add New Book" items={bookData} itemTitle={bookDataTitles} apiPostPath={`${baseUrl}/api/book`} action textSmall paddingReq="10px" contrastBorder headingLight seeMore="/book" narrowColumns={["Code"]} />
             </div>
             <div className="grid grid-cols-1 gap-4 my-6">
                 <Card title="Overdue Book List" listItems />
