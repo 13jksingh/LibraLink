@@ -1,6 +1,20 @@
+'use client'
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-const AddForm = ({ itemTitle, apiPostPath, name , title }) => {
+const AddForm = ({
+    itemTitle,
+    apiPostPath,
+    name,
+    title,
+    inputClass,
+    inputBoxClass,
+    formClass,
+    buttonBoxClass,
+    buttonClass,
+    divClass,
+    inputBoxesDivClass,
+    titleClass
+}) => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [loading, setLoading] = useState(false);
     const [sucess, setSuccess] = useState(false);
@@ -34,25 +48,28 @@ const AddForm = ({ itemTitle, apiPostPath, name , title }) => {
         setLoading(false);
     };
 
-    return (<>
+    return (<div className={divClass}>
         {sucess && <p className="text-green-400 text-sm">{name} added successfully</p>}
         {failure && <p className="text-red-400 text-sm">Error occoured, try again later</p>}
-        <h1 className="p-4 text-center">{title}</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-            {itemTitle && Object.keys(itemTitle).map(y => (
-                <div className="flex items-center" key={y}>
-                    <label htmlFor={itemTitle[y].alise}>{itemTitle[y].icon}</label>
-                    <input
-                        className="focus:outline-none rounded-md dark:bg-[#353334] w-40 px-2 mx-2"
-                        type={itemTitle[y].type}
-                        id={itemTitle[y].alise}
-                        placeholder={y}
-                        {...register(itemTitle[y].alise, { required: true })}
-                    />
-                    {errors[itemTitle[y].alise] && <span>{y} is required</span>}
-                </div>
-            ))}
-
+        <h1 className={titleClass}>{title}</h1>
+        <form onSubmit={handleSubmit(onSubmit)} className={formClass}>
+            <div className={inputBoxesDivClass}>
+                {Object.keys(itemTitle)
+                    .filter(y => itemTitle[y].alise)
+                    .map(y => (
+                        <div className={inputBoxClass} key={y}>
+                            <label htmlFor={itemTitle[y].alise}>{itemTitle[y].icon}</label>
+                            <input
+                                className={inputClass}
+                                type={itemTitle[y].type}
+                                id={itemTitle[y].alise}
+                                placeholder={y}
+                                {...register(itemTitle[y].alise, { required: true })}
+                            />
+                            {errors[itemTitle[y].alise] && <p className="text-xs text-center">{y} is required</p>}
+                        </div>
+                    ))}
+            </div>
             {/* <div className="flex items-center">
                 <label htmlFor="studentId"><BsPersonVcard /></label>
                 <input
@@ -98,11 +115,11 @@ const AddForm = ({ itemTitle, apiPostPath, name , title }) => {
                 />
                 {errors.phone && <span>Phone Number is required</span>}
             </div> */}
-            <div className="flex justify-center">
-                <button type="submit" disabled={loading} className="rounded-lg bg-[#F65867] w-28">{loading ? "Loading..." : "Submit"}</button>
+            <div className={buttonBoxClass}>
+                <button type="submit" disabled={loading} className={buttonClass}>{loading ? "Loading..." : "Submit"}</button>
             </div>
         </form>
-    </>
+    </div>
     );
 };
 
