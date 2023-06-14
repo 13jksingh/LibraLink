@@ -63,6 +63,7 @@ const Book = async () => {
         buttonClass="bg-[#F65867] rounded-xl text-white px-10 py-1"
         inputClass="rounded-xl px-2 py-1 dark:bg-[#201C1D] bg-[#F9F9F9] "
         titleClass="text-xl font-bold px-4 py-2"
+        url="book"
       />
       <Card
         listItems
@@ -73,6 +74,7 @@ const Book = async () => {
         headingBgColor
         narrowColumns={["ID"]}
         page="book"
+        url="book"
       />
     </div>
   );

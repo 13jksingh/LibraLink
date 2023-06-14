@@ -22,7 +22,8 @@ const Card = ({
     count,
     icon,
     action,
-    page
+    page,
+    url
 }) => {
     const [showForm, setShowForm] = useState(false);
     const handleAddStudentClick = () => {
@@ -56,7 +57,7 @@ const Card = ({
                     )}
                 </div>
                 <div className="mt-6">
-                    <Table items={items} itemTitle={itemTitle} action={action} textSmall={textSmall} textLeft={textLeft} paddingReq={paddingReq} contrastBorder={contrastBorder} headingBgColor={headingBgColor} headingLight={headingLight} narrowColumns={narrowColumns} page={page} />
+                    <Table items={items} itemTitle={itemTitle} action={action} textSmall={textSmall} textLeft={textLeft} paddingReq={paddingReq} contrastBorder={contrastBorder} headingBgColor={headingBgColor} headingLight={headingLight} narrowColumns={narrowColumns} page={page} url={url} />
                 </div>
                 <a href={seeMore} className="flex justify-end text-[#F65867] text-sm font-semibold">See More</a>
             </div>

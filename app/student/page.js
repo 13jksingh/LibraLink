@@ -79,6 +79,7 @@ const Student = async () => {
                 headingBgColor
                 narrowColumns={["ID"]}
                 page="student"
+                url="/student"
             />
         </div>
     );

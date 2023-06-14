@@ -7,7 +7,8 @@ import { redirect } from 'next/navigation'
 
 const ActionButton = ({
     id,
-    page
+    page,
+    url
 }) => {
     const [loadingDelete, setLoadingDelete] = useState(false);
     const handleView = () => {
@@ -30,6 +31,8 @@ const ActionButton = ({
 
             const data = await response.json();
             console.log(data);
+            const revalidate = await fetch(`/api/revalidate?path=${url}`);
+            console.log(revalidate);
         } catch (error) {
             console.error(error);
             // Handle the error

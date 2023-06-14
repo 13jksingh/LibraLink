@@ -11,7 +11,8 @@ const Table = ({
   headingBgColor,
   headingLight,
   narrowColumns,
-  page
+  page,
+  url
 }) => {
   const truncateText = (text, limit) => {
     if (!text){
@@ -56,7 +57,7 @@ const Table = ({
                     className={`table-cell ${contrastBorder ? "border-[#6b7280] dark:border-[#9ca3af] border-b" : "dark:border-[#201C1D] border-[#f0f0f0] border-b"}`}
                     style={{ padding: paddingReq, wordWrap: "break-word", width: isNarrowColumn(y) ? "20%" : "auto" }}
                   >
-                    {itemTitle[y]==="component" ? <ActionButton id={x._id} page={page} /> :truncateText(x[itemTitle[y].alise], 19)}
+                    {itemTitle[y]==="component" ? <ActionButton id={x._id} page={page} url={url} /> :truncateText(x[itemTitle[y].alise], 19)}
                   </div>
                 ))}
             </div>

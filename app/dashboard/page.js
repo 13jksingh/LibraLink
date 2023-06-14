@@ -100,7 +100,7 @@ const Dashboard = async () => {
                     headingLight
                     seeMore="/student"
                     narrowColumns={["ID"]}
-
+                    url="/student"
                 />
                 <Card
                     title="Books"
@@ -116,6 +116,7 @@ const Dashboard = async () => {
                     headingLight
                     seeMore="/book"
                     narrowColumns={["Code"]}
+                    url="/book"
                 />
 
             </div>
