@@ -8,6 +8,7 @@ import { BsPersonVcard } from "react-icons/bs"
 import { AiOutlineMail, AiOutlinePhone } from "react-icons/ai"
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
+export const revalidate = 60 // revalidate this page every 60 seconds
 
 async function getStudentData(limit = 4) {
     try {
