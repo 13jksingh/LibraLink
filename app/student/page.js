@@ -5,7 +5,7 @@ import { AiOutlineMail, AiOutlinePhone } from "react-icons/ai"
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
 import AddForm from "../components/form";
-export const revalidate = 60 // revalidate this page every 60 seconds
+// export const revalidate = 60 // revalidate this page every 60 seconds
 
 async function getStudentData(limit = 4) {
     // try {
@@ -67,6 +67,7 @@ const Student = async () => {
                 buttonClass="bg-[#F65867] rounded-xl text-white px-10 py-1"
                 inputClass="rounded-xl px-2 py-1 dark:bg-[#201C1D] bg-[#F9F9F9] "
                 titleClass="text-xl font-bold px-4 py-2"
+                url="/student"
             />
             <Card
                 listItems

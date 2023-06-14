@@ -13,7 +13,8 @@ const AddForm = ({
     buttonClass,
     divClass,
     inputBoxesDivClass,
-    titleClass
+    titleClass,
+    url
 }) => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [loading, setLoading] = useState(false);
@@ -36,6 +37,8 @@ const AddForm = ({
             if (response.ok) {
                 console.log("Form submitted successfully");
                 e.target.reset();
+                const revalidate = await fetch(`/api/revalidate?path=${url}`);
+                console.log(revalidate);
                 setSuccess(true);
             } else {
                 setFailure(true);
