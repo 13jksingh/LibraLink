@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react';
 import Modal from './components/modal';
+export const revalidate = 60 // revalidate this page every 60 seconds
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
