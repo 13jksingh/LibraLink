@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ActionButton from "./actionButtons";
 
 const Table = ({
@@ -12,10 +12,10 @@ const Table = ({
   headingLight,
   narrowColumns,
   page,
-  url
+  url,
 }) => {
   const truncateText = (text, limit) => {
-    if (!text){
+    if (!text) {
       return;
     }
     if (text.length <= limit) {
@@ -28,18 +28,65 @@ const Table = ({
     return narrowColumns.includes(column);
   };
 
+  const [editId, setEditId] = useState(""); // State to store the currently edited ID
+  const [inputValues, setInputValues] = useState({}); // State to store the input values for each column
+
+  const handleEdit = (id) => {
+    // Handle the edit action with the received id
+    console.log(`Edit clicked for ID: ${id}`);
+    setEditId(id); // Set the ID for the input boxes that should be visible
+  };
+  const handleCloseEdit = (id) => {
+    // Handle the edit action with the received id
+    console.log(`Edit closed for ID: ${id}`);
+    setEditId(null); // Set the ID for the input boxes that should be visible
+    setInputValues({});
+  };
+
+  const handleInputChange = (column, value) => {
+    setInputValues((prevInputValues) => ({
+      ...prevInputValues,
+      [column]: value,
+    }));
+  };
+
+  const handleSave = (id) => {
+    // Handle the save action with the provided id and input values
+    console.log(`Save clicked for ID: ${id}, Input Values:`, inputValues);
+    // Perform your update logic here using the id and input values
+  };
+
   return (
     <div className="table-auto overflow-x-auto my-2">
-      <div className={`table table-fixed w-full ${textSmall ? "text-sm" : ""} ${textLeft ? "text-left" : "text-center"}`}>
+      <div
+        className={`table table-fixed w-full ${
+          textSmall ? "text-sm" : ""
+        } ${textLeft ? "text-left" : "text-center"}`}
+      >
         {/* Table Header */}
-        <div className={`table-header-group ${headingBgColor ? "dark:bg-[#201C1D] bg-[#F9F9F9]" : ""}`}>
+        <div
+          className={`table-header-group ${
+            headingBgColor ? "dark:bg-[#201C1D] bg-[#F9F9F9]" : ""
+          }`}
+        >
           <div className="table-row">
             {itemTitle &&
               Object.keys(itemTitle).map((x, i) => (
                 <div
                   key={i}
-                  className={`table-cell rounded-t-lg ${headingLight ? "font-medium text-[#6b7280] dark:text-[#9ca3af]" : ""} ${contrastBorder ? "border-[#6b7280] dark:border-[#9ca3af] border-b" : "dark:border-[#201C1D] border-[#f0f0f0] border-b"}`}
-                  style={{ padding: paddingReq, width: isNarrowColumn(x) ? "17%" : "auto" }}
+                  className={`table-cell rounded-t-lg ${
+                    headingLight
+                      ? "font-medium text-[#6b7280] dark:text-[#9ca3af]"
+                      : ""
+                  } ${
+                    contrastBorder
+                      ? "border-[#6b7280] dark:border-[#9ca3af] border-b"
+                      : "dark:border-[#201C1D] border-[#f0f0f0] border-b"
+                  }`}
+                  style={{
+                    padding: paddingReq,
+                    width: isNarrowColumn(x) ? "17%" : "auto",
+                  }}
                 >
                   {x}
                 </div>
@@ -54,10 +101,46 @@ const Table = ({
                 Object.keys(itemTitle).map((y, i) => (
                   <div
                     key={i}
-                    className={`table-cell ${contrastBorder ? "border-[#6b7280] dark:border-[#9ca3af] border-b" : "dark:border-[#201C1D] border-[#f0f0f0] border-b"}`}
-                    style={{ padding: paddingReq, wordWrap: "break-word", width: isNarrowColumn(y) ? "20%" : "auto" }}
+                    className={`table-cell ${
+                      contrastBorder
+                        ? "border-[#6b7280] dark:border-[#9ca3af] border-b"
+                        : "dark:border-[#201C1D] border-[#f0f0f0] border-b"
+                    }`}
+                    style={{
+                      padding: paddingReq,
+                      wordWrap: "break-word",
+                      width: isNarrowColumn(y) ? "20%" : "auto",
+                    }}
                   >
-                    {itemTitle[y]==="component" ? <ActionButton id={x._id} page={page} url={url} /> :truncateText(x[itemTitle[y].alise], 19)}
+                    {itemTitle[y] === "component" ? (
+                      <ActionButton
+                        id={x._id}
+                        page={page}
+                        url={url}
+                        handleEdit={handleEdit}
+                        handleCloseEdit={handleCloseEdit}
+                        inputValue={inputValues || ""}
+                        handleInputChange={(value) => handleInputChange(y, value)}
+                        handleSave={() => handleSave(x._id)}
+                      />
+                      
+                    ) : (
+                      <>
+                        {editId === x._id ? (
+                          <input
+                            id={`myText-${x._id}-${y}`}
+                            type="text"
+                            className="text-center w-full"
+                            style={{ border: "none", background: "transparent", outline: "0" }}
+                            value={inputValues[itemTitle[y].alise] || ""}
+                            onChange={(e) => handleInputChange(itemTitle[y].alise, e.target.value)}
+                            placeholder={x[itemTitle[y].alise]}
+                          />
+                        ) : (
+                          truncateText(x[itemTitle[y].alise], 19)
+                        )}
+                      </>
+                    )}
                   </div>
                 ))}
             </div>
