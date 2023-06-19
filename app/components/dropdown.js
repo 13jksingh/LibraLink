@@ -1,3 +1,4 @@
+'use client'
 const Dropdown = ({ options, selectedOption, onOptionChange }) => {
   return (
     <div className="dropdown">

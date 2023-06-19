@@ -6,6 +6,7 @@ import clientPromise from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
 import AddForm from "../components/form";
 export const revalidate = 60 // revalidate this page every 60 seconds
+import { Suspense } from "react";
 
 async function getBookData(limit = 4) {
   // try {
@@ -32,9 +33,9 @@ async function getBookData(limit = 4) {
     const collection = db.collection('Book');
     const documents = await collection.find({}).sort({ _id: -1 }).limit(limit).toArray();
     return NextResponse.json({ data: documents }).json();
-} catch (e) {
+  } catch (e) {
     throw new Error('Failed to fetch data');
-}
+  }
 }
 const Book = async () => {
   var { data: bookData } = await getBookData(10);
@@ -50,7 +51,8 @@ const Book = async () => {
     "Action": "component"
   }
   return (
-    <div className="">
+    <section >
+    <Suspense fallback={<p>Loading Add Book Form</p>}>
       <AddForm
         itemTitle={bookDataTitles}
         title="Add new Book"
@@ -65,18 +67,21 @@ const Book = async () => {
         titleClass="text-xl font-bold px-4 py-2"
         url="book"
       />
-      <Card
-        listItems
-        buttonTitle="Export CSV"
-        items={bookData}
-        itemTitle={bookDataTitles}
-        paddingReq="20px"
-        headingBgColor
-        narrowColumns={["ID"]}
-        page="book"
-        url="book"
-      />
-    </div>
+      </Suspense>
+      <Suspense fallback={<p>Loading Books...</p>}>
+        <Card
+          listItems
+          buttonTitle="Export CSV"
+          items={bookData}
+          itemTitle={bookDataTitles}
+          paddingReq="20px"
+          headingBgColor
+          narrowColumns={["ID"]}
+          page="book"
+          url="book"
+        />
+      </Suspense>
+      </section>
   );
 }
 

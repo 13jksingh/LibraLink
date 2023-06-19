@@ -1,3 +1,4 @@
+'use client'
 const Button = (props) => {
     return ( 
         // <button className="">{props.title}</button>

@@ -1,3 +1,4 @@
+'use client'
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { FiBookOpen, FiSettings } from "react-icons/fi";
 import { HiOutlineUsers } from "react-icons/hi";
