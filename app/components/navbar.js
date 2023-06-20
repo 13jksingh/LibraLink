@@ -6,14 +6,6 @@ import DropDownNav from "./dropDownNav";
 
 
 const Navbar = () => {
-    const getLinkClass = (index) => {
-        let linkClass = "";
-        // if (active === index) {
-        //     linkClass += "text-[#F65867]";
-        // }
-        return linkClass;
-    };
-
     return (
         <nav className="h-15 p-5 px-10 flex justify-between items-center text-3xl">
             {/* Logo and Heading */}
