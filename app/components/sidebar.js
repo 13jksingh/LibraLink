@@ -17,7 +17,7 @@ const Sidebar = ({ segment }) => {
   }
 
   const getLinkClass = (index) => {
-    let linkClass = "rounded-md p-2";
+    let linkClass = "rounded-md p-2 hover:bg-[#F65867] hover:text-white hover:scale-125";
     if (active === index) {
       linkClass += " bg-[#F65867] text-white scale-125";
     }

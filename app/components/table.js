@@ -51,11 +51,11 @@ const Table = ({
     }));
   };
 
-  const handleSave = (id) => {
-    // Handle the save action with the provided id and input values
-    console.log(`Save clicked for ID: ${id}, Input Values:`, inputValues);
-    // Perform your update logic here using the id and input values
-  };
+  // const handleSave = (id) => {
+  //   // Handle the save action with the provided id and input values
+  //   console.log(`Save clicked for ID: ${id}, Input Values:`, inputValues);
+  //   // Perform your update logic here using the id and input values
+  // };
 
   return (
     <div className="table-auto overflow-x-auto my-2">
@@ -121,8 +121,6 @@ const Table = ({
                         handleEdit={handleEdit}
                         handleCloseEdit={handleCloseEdit}
                         inputValue={inputValues || ""}
-                        handleInputChange={(value) => handleInputChange(y, value)}
-                        handleSave={() => handleSave(x._id)}
                       />
                       
                     ) : (
