@@ -24,7 +24,7 @@ export default function SearchBox() {
                 value={searchQuery}
                 onChange={handleInputChange}
             />
-            {searchQuery && <SearchRes data={data} />}
+            {searchQuery && data && <SearchRes data={data} />}
         </div>
     );
 }

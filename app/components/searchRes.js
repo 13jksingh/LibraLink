@@ -36,7 +36,7 @@ const SearchRes = ({ data }) => {
                     </li>
                 ))}
                 {/* If no result found */}
-                {data?.students.length == 0 && data?.books.length == 0 &&
+                {data?.students?.length == 0 && data?.books?.length == 0 &&
                     <li className="p-3">
                         <div className="flex items-center gap-2">
                             <MdSearchOff className="text-lg" />
