@@ -36,6 +36,6 @@ export async function GET(request) {
   } catch (error) {
     console.error('Error performing search:', error);
     // Return an error response
-    return new NextResponse(500, { error: 'Internal server error' });
+    return new NextResponse(500, { error: error });
   }
 }
