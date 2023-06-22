@@ -1,5 +1,6 @@
 //Components
 import DarkModeButton from "./darkModeButton";
+import SearchBox from "./searchBox";
 //Icons
 import { HiOutlineLibrary } from "react-icons/hi";
 import DropDownNav from "./dropDownNav";
@@ -14,9 +15,7 @@ const Navbar = () => {
                 <h1>LibraLink</h1>
             </div>
             {/* Search Box */}
-            <div>
-                <input type="search" className="hidden text-xl lg:block rounded-xl bg-[#F8F8F8] px-4 w-[400px] py-2 text-slate-950 focus:outline-none" placeholder="Search ..." />
-            </div>
+            <SearchBox />
             {/* Dark Mode */}
             <div className="flex gap-3 items-center md:gap-5">
                 <DarkModeButton />
