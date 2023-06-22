@@ -5,8 +5,9 @@ export async function GET(request) {
   try {
     const search = request.nextUrl.searchParams.get('search');
     if (!search) {
-        return NextResponse.json({ message: 'Type something to search' }, { status: 400 });
-      }
+      return new NextResponse(JSON.stringify({ message: 'Type something to search' }), { status: 400 });
+    }
+
     const client = await clientPromise;
     const db = client.db("LibraLink");
     const bookCollection = db.collection('Book');
@@ -29,13 +30,13 @@ export async function GET(request) {
     const searchResultsStudent = await studentCollection.find(searchQuery).toArray();
 
     // Return the search results as the API response
-    return NextResponse.json({
-        books: searchResultsBook,
-        students: searchResultsStudent
-      });
+    return new NextResponse(JSON.stringify({
+      books: searchResultsBook,
+      students: searchResultsStudent
+    }));
   } catch (error) {
     console.error('Error performing search:', error);
     // Return an error response
-    return new NextResponse({ "error": error });
+    return new NextResponse(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }
