@@ -23,6 +23,8 @@ const AddForm = ({
 
     const onSubmit = async (data, e) => {
         setLoading(true);
+        setSuccess(false);
+        setFailure(false);
         try {
             const response = await fetch(apiPostPath, {
                 method: "POST",
@@ -40,6 +42,7 @@ const AddForm = ({
                 const revalidate = await fetch(`/api/revalidate?path=${url}`);
                 console.log(revalidate);
                 setSuccess(true);
+                window.location.reload();
             } else {
                 setFailure(true);
                 console.error("Form submission failed");

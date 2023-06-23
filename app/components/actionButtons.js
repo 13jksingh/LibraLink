@@ -29,11 +29,6 @@ const ActionButton = ({
     });
     const [editing, setEditing] = useState(false);
 
-    const handleView = () => {
-        console.log("/student/" + id);
-        router.push("/student/" + id);
-    };
-
     const handle_edit = () => {
         if (!editing) {
             handleEdit(id);
@@ -57,7 +52,7 @@ const ActionButton = ({
             });
 
             if (!response.ok) {
-                throw new Error("Failed to delete student");
+                throw new Error(`Failed to delete ${url}`);
             }
 
             const data = await response.json();
@@ -66,6 +61,7 @@ const ActionButton = ({
                 ...prevState,
                 delete: true
             }));
+            window.location.reload();
         } catch (error) {
             console.error(error);
             // Handle the error
@@ -86,7 +82,7 @@ const ActionButton = ({
         }));
         try {
             // console.log(inputValue);
-            const response = await fetch(`/api/student?id=${id}`, {
+            const response = await fetch(`/api/${url}?id=${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -95,7 +91,7 @@ const ActionButton = ({
             });
             console.log(inputValue,response);
             if (!response.ok) {
-                throw new Error('Failed to update student');
+                throw new Error(`Failed to update ${url}`);
             }
             const data = await response.json();
             const revalidate = await fetch("/api/revalidate");
@@ -103,6 +99,7 @@ const ActionButton = ({
                 ...prevState,
                 edit: true
             }));
+            window.location.reload();
             // console.log(data,inputValue);
         } catch (error) {
             console.error(error);
@@ -153,7 +150,7 @@ const ActionButton = ({
                         {/* View */}
                         {editDelete? null :<Link
                             className="text-green-400 shadow-md border border-[#F9F9F9] dark:border-[#201C1D] p-1 rounded-md hover:border-[#78b9ff] transition"
-                            href={"/student/" + id}
+                            href={`/${page}/${id}`}
                         >
                             <AiOutlineEye />
                         </Link>}

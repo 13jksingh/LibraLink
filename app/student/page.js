@@ -5,27 +5,8 @@ import { AiOutlineMail, AiOutlinePhone } from "react-icons/ai"
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
 import AddForm from "../components/form";
-// export const revalidate = 60 // revalidate this page every 60 seconds
 
 async function getStudentData(limit = 4) {
-    // try {
-    //     const response = await fetch(`http://localhost:3000/api/student?limit=${limit}`, {
-    //         method: 'GET',
-    //         next: { revalidate: 5 }
-    //     });
-
-    //     if (!response.ok) {
-    //         throw new Error('Failed to delete student');
-    //     }
-
-    //     const data = await response.json();
-    //     console.log(data);
-    //     return data;
-    //     // Handle the response data or perform additional actions
-    // } catch (error) {
-    //     console.error(error);
-    //     // Handle the error
-    // }
     try {
         // const limit =parseInt(request.nextUrl.searchParams.get('limit')) || 4;
         const client = await clientPromise;

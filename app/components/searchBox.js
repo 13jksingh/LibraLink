@@ -13,8 +13,6 @@ export default function SearchBox() {
         searchQuery ? `/api/search?search=${encodeURIComponent(searchQuery)}` : null,
         fetcher
       );
-    console.log(data,error,isLoading);
-
     return (
         <div className='hidden lg:block'>
             <input

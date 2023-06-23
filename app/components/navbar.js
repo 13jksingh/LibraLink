@@ -1,10 +1,14 @@
 //Components
-import DarkModeButton from "./darkModeButton";
+// import DarkModeButton from "./darkModeButton";
 import SearchBox from "./searchBox";
+import DropDownNav from "./dropDownNav";
+import dynamic from 'next/dynamic'
+ 
+const DarkModeButton = dynamic(() => import('./darkModeButton'), {
+  loading: () => <p>Loading...</p>,
+})
 //Icons
 import { HiOutlineLibrary } from "react-icons/hi";
-import DropDownNav from "./dropDownNav";
-
 
 const Navbar = () => {
     return (
