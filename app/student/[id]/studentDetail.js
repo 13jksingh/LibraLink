@@ -47,6 +47,7 @@ const StudentDetail = ({
                     handleCloseEdit={handleCloseEdit}
                     inputValue={inputValues || ""}
                     page="student"
+                    url="/student"
                     editDelete
                 />
             </div>
