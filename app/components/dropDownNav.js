@@ -23,11 +23,11 @@ export default function DropDownNav() {
                 <div className="absolute rounded-md top-20 left-0 w-full dark:bg-[#201C1D] bg-[#F9F9F9] p-4 z-10">
                     {/* Dropdown content goes here */}
                     <div className="flex flex-col items-center py-6 gap-3">
-                        <Link href="/dashboard" className={getLinkClass(1)} onClick={handleDropdownToggle}>Dashboard</Link>
-                        <Link href="/student" className={getLinkClass(2)} onClick={handleDropdownToggle}>Students</Link>
-                        <Link href="/book" className={getLinkClass(3)} onClick={handleDropdownToggle}>Books</Link>
-                        <Link href="/setting" className={getLinkClass(3)} onClick={handleDropdownToggle}>Setting</Link>
-                        <Link href="/setting" className={getLinkClass(4)} onClick={handleDropdownToggle}>SignUp</Link>
+                        <Link href="/dashboard" className="hover:text-[#F65867] transition" onClick={handleDropdownToggle}>Dashboard</Link>
+                        <Link href="/student" className="hover:text-[#F65867] transition" onClick={handleDropdownToggle}>Students</Link>
+                        <Link href="/book" className="hover:text-[#F65867] transition" onClick={handleDropdownToggle}>Books</Link>
+                        <Link href="/setting" className="hover:text-[#F65867] transition" onClick={handleDropdownToggle}>Setting</Link>
+                        <Link href="/setting" className="hover:text-[#F65867] transition" onClick={handleDropdownToggle}>SignUp</Link>
                     </div>
                 </div>
             )}
