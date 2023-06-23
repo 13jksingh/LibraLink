@@ -4,6 +4,7 @@ import { AiOutlineEdit, AiOutlineDelete, AiOutlineEye, AiOutlineLoading3Quarters
 import { BiLoaderCircle, BiErrorCircle } from "react-icons/bi";
 import { IconContext } from "react-icons";
 import { MdDone } from "react-icons/md";
+import Link from "next/link"
 
 const ActionButton = ({
     id,
@@ -11,7 +12,8 @@ const ActionButton = ({
     url,
     handleEdit,
     handleCloseEdit,
-    inputValue
+    inputValue,
+    editDelete
 }) => {
     const [loading, setLoading] = useState({
         "edit": false,
@@ -83,6 +85,7 @@ const ActionButton = ({
             edit: true
         }));
         try {
+            // console.log(inputValue);
             const response = await fetch(`/api/student?id=${id}`, {
                 method: 'PUT',
                 headers: {
@@ -90,7 +93,7 @@ const ActionButton = ({
                 },
                 body: JSON.stringify(inputValue)
             });
-
+            console.log(inputValue,response);
             if (!response.ok) {
                 throw new Error('Failed to update student');
             }
@@ -100,6 +103,7 @@ const ActionButton = ({
                 ...prevState,
                 edit: true
             }));
+            // console.log(data,inputValue);
         } catch (error) {
             console.error(error);
             // Handle the error'
@@ -144,44 +148,48 @@ const ActionButton = ({
                     </button>
                 </div>
                 :
-                <div className="flex items-center justify-center gap-2 text-xl">
-                    <a
-                        className="text-green-400 shadow-md border border-[#F9F9F9] dark:border-[#201C1D] p-1 rounded-md hover:border-[#78b9ff] transition"
-                        href={"/student/" + id}
-                    >
-                        <AiOutlineEye />
-                    </a>
-                    {/* Edit */}
-                    <button
-                        className="text-blue-400 shadow-md border border-[#F9F9F9] dark:border-[#201C1D] p-1 rounded-md hover:border-[#78b9ff] transition"
-                        onClick={handle_edit}
-                    >
-                        <AiOutlineEdit />
-                    </button>
-                    {/* Delete */}
-                    <button
-                        className="text-red-400 shadow-md border border-[#F9F9F9] dark:border-[#201C1D] p-1 rounded-md hover:border-[#78b9ff] transition"
-                        onClick={handleDelete}
-                    >
-                        {loading.delete ? (
-                            <div className="flex items-center justify-center">
-                                <IconContext.Provider value={{ className: "animate-spin text-red-400" }}>
-                                    <BiLoaderCircle />
-                                </IconContext.Provider>
-                            </div>
-                        ) : success.delete ? (
-                            <MdDone />
-                        ) : error.delete ? (
-                            <BiErrorCircle />
-                        ) : (
-                            <AiOutlineDelete />
-                        )}
+                <>
+                    <div className="flex items-center justify-center gap-2 text-xl">
+                        {/* View */}
+                        {editDelete? null :<Link
+                            className="text-green-400 shadow-md border border-[#F9F9F9] dark:border-[#201C1D] p-1 rounded-md hover:border-[#78b9ff] transition"
+                            href={"/student/" + id}
+                        >
+                            <AiOutlineEye />
+                        </Link>}
+                        {/* Edit */}
+                        <button
+                            className="text-blue-400 shadow-md border border-[#F9F9F9] dark:border-[#201C1D] p-1 rounded-md hover:border-[#78b9ff] transition"
+                            onClick={handle_edit}
+                        >
+                            <AiOutlineEdit />
+                        </button>
+                        {/* Delete */}
+                        <button
+                            className="text-red-400 shadow-md border border-[#F9F9F9] dark:border-[#201C1D] p-1 rounded-md hover:border-[#78b9ff] transition"
+                            onClick={handleDelete}
+                        >
+                            {loading.delete ? (
+                                <div className="flex items-center justify-center">
+                                    <IconContext.Provider value={{ className: "animate-spin text-red-400" }}>
+                                        <BiLoaderCircle />
+                                    </IconContext.Provider>
+                                </div>
+                            ) : success.delete ? (
+                                <MdDone />
+                            ) : error.delete ? (
+                                <BiErrorCircle />
+                            ) : (
+                                <AiOutlineDelete />
+                            )}
 
-                    </button>
-                </div>
+                        </button>
+                    </div>
+                </>
             }
         </div>
     );
+
 };
 
 export default ActionButton;

@@ -1,7 +1,7 @@
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
 import { ObjectId } from "mongodb";
-import Image from 'next/image'
+import StudentDetail from "./studentDetail";
 
 async function getStudentData(id) {
     try {
@@ -20,14 +20,9 @@ const StudentView = async ({ params: { id } }) => {
     const { data: studentData } = await getStudentData(id);
     console.log(studentData);
     return (
-        <div className="w-full rounded-xl dark:bg-[#353334] dark:text-white bg-white px-8 py-7">
-            <img
-                src="https://lh3.googleusercontent.com/ogw/AOLn63Erp2jah7UXWhA2ghU-chihEi6U3IByulqkbA73ug=s32-c-mo"
-                width={500}
-                height={500}
-                alt="Picture of the author"
-            />
-        </div>
+        <>
+            <StudentDetail studentData={studentData} id={id} />
+        </>
     );
 }
 
