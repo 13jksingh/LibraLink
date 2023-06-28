@@ -43,7 +43,7 @@ const IssueBook = ({ id }) => {
             });
             console.log(response);
             if (response.ok) {
-                setLoading(true);
+                setSuccess(true);
                 window.location.reload();
                 console.log("Book issued successfully!");
                 // Perform any additional actions or show a success message
