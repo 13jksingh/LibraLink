@@ -72,7 +72,7 @@ const Card = ({
                         url={url}
                     />
                 </div>
-                <a href={seeMore} className="flex justify-end text-[#F65867] text-sm font-semibold">See More</a>
+                {seeMore && <a href={seeMore} className="flex justify-end text-[#F65867] text-sm font-semibold">See More</a>}
             </div>
         )
     }

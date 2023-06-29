@@ -105,8 +105,8 @@ const Table = ({
                     className={`table-cell ${
                       contrastBorder
                         ? "border-[#6b7280] dark:border-[#9ca3af] border-b"
-                        : "dark:border-[#201C1D] border-[#f0f0f0] border-b"
-                    }`}
+                        : "dark:border-[#201C1D] border-[#f0f0f0] border-b"}
+                    `}
                     style={{
                       padding: paddingReq,
                       wordWrap: "break-word",

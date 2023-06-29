@@ -39,6 +39,7 @@ export async function POST(request) {
         studentId: new ObjectId(studentId),
         issueDate: new Date(),
         dueDate: new Date(dueDate),
+        returned : false
       };
   
       // Insert the lend document into the Lend collection
@@ -54,21 +55,21 @@ export async function POST(request) {
   }
   
 
-// export async function DELETE(request) {
-//     // console.log(request);
-//     try {
-//     //   const { id } = request.query; // Retrieve the student ID from the request query
-//       const id = request.nextUrl.searchParams.get('id');
-//       const deleteId = new ObjectId(id);
-//       const client = await clientPromise;
-//       const db = client.db("LibraLink");
-//       const collection = db.collection('Book');
+export async function DELETE(request) {
+    // console.log(request);
+    try {
+    //   const { id } = request.query; // Retrieve the student ID from the request query
+      const id = request.nextUrl.searchParams.get('id');
+      const deleteId = new ObjectId(id);
+      const client = await clientPromise;
+      const db = client.db("LibraLink");
+      const collection = db.collection('Lend');
   
-//       const result = await collection.deleteOne({ _id: deleteId });
-//       // Return the deletion result
-//       console.log(result);
-//       return NextResponse.json(result);
-//     } catch (e) {
-//       console.error(e);
-//     }
-//   }  
+      const result = await collection.deleteOne({ _id: deleteId });
+      // Return the deletion result
+      console.log(result);
+      return NextResponse.json(result);
+    } catch (e) {
+      console.error(e);
+    }
+  }  

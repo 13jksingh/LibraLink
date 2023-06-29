@@ -34,62 +34,72 @@ async function getBookData(limit = 4) {
 
 async function getLendData(id) {
     try {
-      const client = await clientPromise;
-      const db = client.db("LibraLink");
-      const lendCollection = db.collection("Lend");
-  
-      const pipeline = [
-        {
-          $match: { studentId: new ObjectId(id) } // Match documents with the specified studentId
-        },
-        {
-          $lookup: {
-            from: "Book", // The collection to join
-            localField: "bookId", // The field from the "Lend" collection to match
-            foreignField: "_id", // The field from the "Book" collection to match
-            as: "bookData" // The name of the array field to add the joined data
-          }
-        },
-        {
-          $unwind: "$bookData" // Flatten the bookData array
-        },
-        {
-          $project: {
-            _id: 1,
-            studentId: 1,
-            issueDate: 1,
-            dueDate: 1,
-            title: "$bookData.title", // Include the title from the joined collection
-            author: "$bookData.author", // Include the author from the joined collection
-            bookCode: "$bookData.code" // Include the author from the joined collection
-          }
-        }
-      ];
-  
-      const documents = await lendCollection.aggregate(pipeline).toArray();
-      console.log(documents);
-      return NextResponse.json({ data: documents }).json();
+        const client = await clientPromise;
+        const db = client.db("LibraLink");
+        const lendCollection = db.collection("Lend");
+
+        const pipeline = [
+            {
+                $match: { studentId: new ObjectId(id) } // Match documents with the specified studentId
+            },
+            {
+                $lookup: {
+                    from: "Book", // The collection to join
+                    localField: "bookId", // The field from the "Lend" collection to match
+                    foreignField: "_id", // The field from the "Book" collection to match
+                    as: "bookData" // The name of the array field to add the joined data
+                }
+            },
+            {
+                $unwind: "$bookData" // Flatten the bookData array
+            },
+            {
+                $project: {
+                    _id: 1,
+                    studentId: 1,
+                    issueDate: 1,
+                    dueDate: 1,
+                    title: "$bookData.title", // Include the title from the joined collection
+                    author: "$bookData.author", // Include the author from the joined collection
+                    bookCode: "$bookData.code" // Include the author from the joined collection
+                }
+            }
+        ];
+
+        const documents = await lendCollection.aggregate(pipeline).toArray();
+        const updatedDoc = documents.map(x => {
+            const formatDate = (date) =>
+                `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })}, ${date.getFullYear()}`;
+            return {
+                ...x,
+                issueDate: formatDate(x.issueDate),
+                dueDate: formatDate(x.dueDate)
+            };
+        });
+
+        return NextResponse.json({ data: updatedDoc }).json();
     } catch (e) {
-      console.log(e);
-      throw new Error("Failed to fetch data");
+        console.log(e);
+        throw new Error("Failed to fetch data");
     }
-  }  
+}
 
 const StudentView = async ({ params: { id } }) => {
     const { data: studentData } = await getStudentData(id);
     const { data: lendData } = await getLendData(id);
-    console.log(lendData,"lund")
+    console.log(lendData, "lund")
     const lendTitles = {
         "BookCode":
-            { "alise": "bookCode", "icon": null, "type": "text" },
+            { "alise": "bookCode" },
         "Title":
-            { "alise": "title", "icon": null, "type": "text" },
+            { "alise": "title" },
         "Author":
-            { "alise": "author", "icon": null, "type": "email" },
+            { "alise": "author" },
         "Issue Date":
-            { "alise": "issueDate", "icon": null, "type": "tel" },
+            { "alise": "issueDate" },
         "Due Date":
-            { "alise": "dueDate", "icon": null, "type": "tel" },
+            { "alise": "dueDate" },
+        "Action": "component"
     }
     return (
         <>
@@ -103,13 +113,12 @@ const StudentView = async ({ params: { id } }) => {
                         <Card
                             listItems
                             items={lendData}
-                            buttonTitle="Export CSV"
                             itemTitle={lendTitles}
                             paddingReq="20px"
                             headingBgColor
                             narrowColumns={["ID"]}
-                            page="student"
-                            url="/student"
+                            page="lend"
+                            url="/lend"
                         />
                     </div>
                 </>

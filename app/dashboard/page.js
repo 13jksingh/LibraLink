@@ -8,11 +8,40 @@ import { BsPersonVcard } from "react-icons/bs"
 import { AiOutlineMail, AiOutlinePhone } from "react-icons/ai"
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
-export const revalidate = 60 // revalidate this page every 60 seconds
+
+async function getBookCount(date) {
+    try {
+      const client = await clientPromise;
+      const db = client.db('LibraLink');
+      const lendCollection = db.collection('Lend');
+  
+      const pipeline = [];
+  
+      if (date) {
+        const currentDate = new Date(date);
+        pipeline.push({
+          $match: {
+            dueDate: { $lt: currentDate }
+          }
+        });
+      }
+  
+      pipeline.push({
+        $count: 'BookCount'
+      });
+  
+      const result = await lendCollection.aggregate(pipeline).toArray();
+      const bookCount = result.length > 0 ? result[0].BookCount : 0;
+  
+      return NextResponse.json({ count: bookCount }).json();
+    } catch (e) {
+      console.log(e);
+      throw new Error('Failed to fetch data');
+    }
+  }
 
 async function getStudentData(limit = 4) {
     try {
-        // const limit =parseInt(request.nextUrl.searchParams.get('limit')) || 4;
         const client = await clientPromise;
         const db = client.db("LibraLink");
         const collection = db.collection('Student');
@@ -24,7 +53,6 @@ async function getStudentData(limit = 4) {
 }
 async function getBookData(limit = 4) {
     try {
-        // const limit =parseInt(request.nextUrl.searchParams.get('limit')) || 4;
         const client = await clientPromise;
         const db = client.db("LibraLink");
         const collection = db.collection('Book');
@@ -32,6 +60,77 @@ async function getBookData(limit = 4) {
         return NextResponse.json({ data: documents }).json();
     } catch (e) {
         throw new Error('Failed to fetch data');
+    }
+}
+async function getLendData(date) {
+    try {
+        const client = await clientPromise;
+        const db = client.db("LibraLink");
+        const lendCollection = db.collection("Lend");
+
+        const pipeline = [
+            {
+                $lookup: {
+                    from: "Book",
+                    localField: "bookId",
+                    foreignField: "_id",
+                    as: "bookData"
+                }
+            },
+            {
+                $unwind: "$bookData"
+            },
+            {
+                $lookup: {
+                    from: "Student",
+                    localField: "studentId",
+                    foreignField: "_id",
+                    as: "studentData"
+                }
+            },
+            {
+                $unwind: "$studentData"
+            },
+            {
+                $project: {
+                    _id: 1,
+                    studentId: 1,
+                    issueDate: 1,
+                    dueDate: 1,
+                    title: "$bookData.title",
+                    author: "$bookData.author",
+                    bookCode: "$bookData.code",
+                    studentName: "$studentData.name" // Include the name from the joined collection
+                }
+            }
+        ];
+
+        if (date) {
+            const currentDate = new Date(date);
+            pipeline.push({
+                $match: {
+                    dueDate: { $lt: currentDate }
+                }
+            });
+        }
+
+        const documents = await lendCollection.aggregate(pipeline).toArray();
+        const updatedDoc = documents.map(x => {
+            const formatDate = (date) =>
+                `${date.getDate()} ${date.toLocaleString("default", {
+                    month: "long"
+                })}, ${date.getFullYear()}`;
+            return {
+                ...x,
+                issueDate: formatDate(x.issueDate),
+                dueDate: formatDate(x.dueDate)
+            };
+        });
+
+        return NextResponse.json({ data: updatedDoc }).json();
+    } catch (e) {
+        console.log(e);
+        throw new Error("Failed to fetch data");
     }
 }
 
@@ -50,8 +149,12 @@ const Dashboard = async () => {
     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
 
     // Data fetch Students and Books
+    const { count: overdueCount } = await getBookCount(currentDate);
+    const { count: count } = await getBookCount();
     var { data: studentData } = await getStudentData();
     var { data: bookData } = await getBookData();
+    const { data: lendData } = await getLendData();
+    const { data: overdueData } = await getLendData(currentDate);
 
     // Meta Data for the table and form 
     const studentDataTitles = {
@@ -74,6 +177,20 @@ const Dashboard = async () => {
         "Description":
             { "alise": "description", "icon": <AiOutlinePhone />, "type": "text" }
     }
+    const lendTitles = {
+        "Student Name":
+            { "alise": "studentName" },
+        "BookCode":
+            { "alise": "bookCode" },
+        "Title":
+            { "alise": "title" },
+        "Author":
+            { "alise": "author" },
+        "Issue Date":
+            { "alise": "issueDate" },
+        "Due Date":
+            { "alise": "dueDate" },
+    }
 
     return (
         <div>
@@ -81,8 +198,8 @@ const Dashboard = async () => {
             <h1 className="py-3 font-semibold">{month} {date}, {year} | {day}, {hours}:{minutes}</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-6">
                 <Card count="1223" title="Total Visitors" icon={<HiOutlineUsers />} />
-                <Card count="740" title="Borrowed Books" icon={<MdOutlineLibraryBooks />} />
-                <Card count="22" title="Overdue Books" icon={<GiSandsOfTime />} />
+                <Card count={count} title="Borrowed Books" icon={<MdOutlineLibraryBooks />} />
+                <Card count={overdueCount} title="Overdue Books" icon={<GiSandsOfTime />} />
                 <Card count="60" title="New Members" icon={<AiOutlineUserAdd />} />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -121,11 +238,34 @@ const Dashboard = async () => {
 
             </div>
             <div className="grid grid-cols-1 gap-4 my-6">
-                <Card title="Overdue Book List" listItems />
+                <Card
+                    title="Issued Book"
+                    listItems
+                    items={lendData}
+                    itemTitle={lendTitles}
+                    action
+                    textSmall
+                    paddingReq="20px 5px"
+                    contrastBorder
+                    headingLight
+                    narrowColumns={["Code"]}
+                    url="/lend"
+                />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card title="Overdue Book List" listItems />
-                <Card title="Overdue Book List" listItems />
+            <div className="grid grid-cols-1 gap-4">
+                <Card
+                    title="Overdue Book List"
+                    listItems
+                    items={overdueData}
+                    itemTitle={lendTitles}
+                    action
+                    textSmall
+                    paddingReq="20px 5px"
+                    contrastBorder
+                    headingLight
+                    narrowColumns={["Code"]}
+                    url="/lend"
+                />
             </div>
         </div>
     );
