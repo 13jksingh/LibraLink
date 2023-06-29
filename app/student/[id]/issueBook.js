@@ -44,6 +44,7 @@ const IssueBook = ({ id }) => {
             console.log(response);
             if (response.ok) {
                 setSuccess(true);
+                const revalidate = await fetch(`/api/revalidate?path=${lend}`);
                 window.location.reload();
                 console.log("Book issued successfully!");
                 // Perform any additional actions or show a success message
