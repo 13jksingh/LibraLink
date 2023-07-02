@@ -3,25 +3,27 @@
 import SearchBox from "./searchBox";
 import DropDownNav from "./dropDownNav";
 import dynamic from 'next/dynamic'
- 
+
 const DarkModeButton = dynamic(() => import('./darkModeButton'), {
-  loading: () => <p>Loading...</p>,
+    loading: () => <p>Loading...</p>,
 })
 //Icons
 import { HiOutlineLibrary } from "react-icons/hi";
+import RevalidateButton from "./revalidateButton";
 
 const Navbar = () => {
     return (
         <nav className="h-15 p-5 px-10 flex justify-between items-center text-3xl">
             {/* Logo and Heading */}
             <div className="flex gap-10 font-bold items-center">
-                <HiOutlineLibrary />
+                <HiOutlineLibrary className="hidden sm:block" />
                 <h1>LibraLink</h1>
             </div>
             {/* Search Box */}
             <SearchBox />
             {/* Dark Mode */}
             <div className="flex gap-3 items-center md:gap-5">
+                <RevalidateButton url="all" />
                 <DarkModeButton />
                 {/* {status === 'loading' ? <>     <div className=" border-t-teal-400 w-8 h-8 border-4 border-blue-200 rounded-full animate-spin"></div>
                     <span class="ml-2 text-base">loading</span></> : status === 'authenticated' ? (
