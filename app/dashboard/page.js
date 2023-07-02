@@ -8,37 +8,38 @@ import { BsPersonVcard } from "react-icons/bs"
 import { AiOutlineMail, AiOutlinePhone } from "react-icons/ai"
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
+import ClientComponent from "../components/clientOnly";
 
 async function getBookCount(date) {
     try {
-      const client = await clientPromise;
-      const db = client.db('LibraLink');
-      const lendCollection = db.collection('Lend');
-  
-      const pipeline = [];
-  
-      if (date) {
-        const currentDate = new Date(date);
+        const client = await clientPromise;
+        const db = client.db('LibraLink');
+        const lendCollection = db.collection('Lend');
+
+        const pipeline = [];
+
+        if (date) {
+            const currentDate = new Date(date);
+            pipeline.push({
+                $match: {
+                    dueDate: { $lt: currentDate }
+                }
+            });
+        }
+
         pipeline.push({
-          $match: {
-            dueDate: { $lt: currentDate }
-          }
+            $count: 'BookCount'
         });
-      }
-  
-      pipeline.push({
-        $count: 'BookCount'
-      });
-  
-      const result = await lendCollection.aggregate(pipeline).toArray();
-      const bookCount = result.length > 0 ? result[0].BookCount : 0;
-  
-      return NextResponse.json({ count: bookCount }).json();
+
+        const result = await lendCollection.aggregate(pipeline).toArray();
+        const bookCount = result.length > 0 ? result[0].BookCount : 0;
+
+        return NextResponse.json({ count: bookCount }).json();
     } catch (e) {
-      console.log(e);
-      throw new Error('Failed to fetch data');
+        console.log(e);
+        throw new Error('Failed to fetch data');
     }
-  }
+}
 
 async function getStudentData(limit = 4) {
     try {
@@ -195,7 +196,9 @@ const Dashboard = async () => {
     return (
         <div>
             <h1 className="text-3xl font-bold">Hey, <span className="text-[#F65867]">Jaskeerat!</span></h1>
-            <h1 className="py-3 font-semibold">{month} {date}, {year} | {day}, {hours}:{minutes}</h1>
+            <ClientComponent>
+                <h1 className="py-3 font-semibold">{month} {date}, {year} | {day}, {hours}:{minutes}</h1>
+            </ClientComponent>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-6">
                 <Card count="1223" title="Total Visitors" icon={<HiOutlineUsers />} />
                 <Card count={count} title="Borrowed Books" icon={<MdOutlineLibraryBooks />} />

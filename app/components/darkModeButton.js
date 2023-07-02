@@ -9,7 +9,7 @@ export default function DarkModeButton() {
     const [currentTheme , setCurrentTheme] = useState(null);
     useEffect(()=>{
         theme === 'system' ? setCurrentTheme(systemTheme) : setCurrentTheme(theme);
-    },[])
+    },[theme])
     return (
         <button
             onClick={() => theme == "dark" ? setTheme('light') : setTheme("dark")}
