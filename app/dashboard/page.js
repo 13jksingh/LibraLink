@@ -8,38 +8,38 @@ import { BsPersonVcard } from "react-icons/bs"
 import { AiOutlineMail, AiOutlinePhone } from "react-icons/ai"
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
-import ClientComponent from "../components/clientOnly";
+import Time from "./time";
 
-async function getBookCount(date) {
+async function getBookCount(date=false) {
     try {
-        const client = await clientPromise;
-        const db = client.db('LibraLink');
-        const lendCollection = db.collection('Lend');
-
-        const pipeline = [];
-
-        if (date) {
-            const currentDate = new Date(date);
-            pipeline.push({
-                $match: {
-                    dueDate: { $lt: currentDate }
-                }
-            });
-        }
-
+      const client = await clientPromise;
+      const db = client.db('LibraLink');
+      const lendCollection = db.collection('Lend');
+  
+      const pipeline = [];
+  
+      if (date) {
+        const currentDate = new Date();
         pipeline.push({
-            $count: 'BookCount'
+          $match: {
+            dueDate: { $lt: currentDate }
+          }
         });
-
-        const result = await lendCollection.aggregate(pipeline).toArray();
-        const bookCount = result.length > 0 ? result[0].BookCount : 0;
-
-        return NextResponse.json({ count: bookCount }).json();
+      }
+  
+      pipeline.push({
+        $count: 'BookCount'
+      });
+  
+      const result = await lendCollection.aggregate(pipeline).toArray();
+      const bookCount = result.length > 0 ? result[0].BookCount : 0;
+  
+      return NextResponse.json({ count: bookCount }).json();
     } catch (e) {
-        console.log(e);
-        throw new Error('Failed to fetch data');
+      console.log(e);
+      throw new Error('Failed to fetch data');
     }
-}
+  }
 
 async function getStudentData(limit = 4) {
     try {
@@ -63,7 +63,7 @@ async function getBookData(limit = 4) {
         throw new Error('Failed to fetch data');
     }
 }
-async function getLendData(date) {
+async function getLendData(date=false) {
     try {
         const client = await clientPromise;
         const db = client.db("LibraLink");
@@ -107,7 +107,8 @@ async function getLendData(date) {
         ];
 
         if (date) {
-            const currentDate = new Date(date);
+            const currentDate = new Date();
+
             pipeline.push({
                 $match: {
                     dueDate: { $lt: currentDate }
@@ -140,22 +141,22 @@ const Dashboard = async () => {
     let baseUrl = "";
     process.env.VERCEL_URL ? baseUrl = "https://" + process.env.VERCEL_URL : baseUrl = "http://localhost:3000";
 
-    // Date and Time
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = currentDate.toLocaleString('default', { month: 'long' });
-    const day = currentDate.toLocaleString('default', { weekday: 'long' });
-    const date = currentDate.getDate();
-    const hours = String(currentDate.getHours()).padStart(2, '0');
-    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    // // Date and Time
+    // const currentDate = new Date();
+    // const year = currentDate.getFullYear();
+    // const month = currentDate.toLocaleString('default', { month: 'long' });
+    // const day = currentDate.toLocaleString('default', { weekday: 'long' });
+    // const date = currentDate.getDate();
+    // const hours = String(currentDate.getHours()).padStart(2, '0');
+    // const minutes = String(currentDate.getMinutes()).padStart(2, '0');
 
     // Data fetch Students and Books
-    const { count: overdueCount } = await getBookCount(currentDate);
+    const { count: overdueCount } = await getBookCount(true);
     const { count: count } = await getBookCount();
     var { data: studentData } = await getStudentData();
     var { data: bookData } = await getBookData();
     const { data: lendData } = await getLendData();
-    const { data: overdueData } = await getLendData(currentDate);
+    const { data: overdueData } = await getLendData(true);
 
     // Meta Data for the table and form 
     const studentDataTitles = {
@@ -196,9 +197,8 @@ const Dashboard = async () => {
     return (
         <div>
             <h1 className="text-3xl font-bold">Hey, <span className="text-[#F65867]">Jaskeerat!</span></h1>
-            <ClientComponent>
-                <h1 className="py-3 font-semibold">{month} {date}, {year} | {day}, {hours}:{minutes}</h1>
-            </ClientComponent>
+            {/* <h1 className="py-3 font-semibold">{month} {date}, {year} | {day}, {hours}:{minutes}</h1> */}
+            <Time />
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-6">
                 <Card count="1223" title="Total Visitors" icon={<HiOutlineUsers />} />
                 <Card count={count} title="Borrowed Books" icon={<MdOutlineLibraryBooks />} />
