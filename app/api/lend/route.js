@@ -23,7 +23,7 @@ export async function POST(request) {
       const bookCollection = db.collection("Book");
       const studentCollection = db.collection("Student");
   
-      const { bookId, studentId, dueDate } = await request.json();
+      const { bookId, studentId } = await request.json();
   
       // Check if the book and student exist
       const book = await bookCollection.findOne({ _id: new ObjectId(bookId) });
@@ -32,14 +32,17 @@ export async function POST(request) {
       if (!book || !student) {
         return NextResponse.json("Invalid book or student ID");
       }
+
+      const dueDate = new Date();
+      dueDate.setDate(dueDate.getDate() + 7)
   
       // Prepare the lend document
       const lendDocument = {
         bookId: new ObjectId(bookId),
         studentId: new ObjectId(studentId),
         issueDate: new Date(),
-        dueDate: new Date(dueDate),
-        returned : false
+        dueDate: dueDate,
+        returnedDate : null
       };
   
       // Insert the lend document into the Lend collection

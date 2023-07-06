@@ -3,12 +3,19 @@ import { NextResponse } from 'next/server';
 import { ObjectId } from "mongodb";
 export async function GET(request) {
     try {
-        const limit = parseInt(request.nextUrl.searchParams.get('limit')) || 4;
+        const limit = parseInt(request.nextUrl.searchParams.get('limit'));
         const client = await clientPromise;
         const db = client.db("LibraLink");
         const collection = db.collection('Student');
-        const documents = await collection.find({}).sort({ _id: -1 }).limit(limit).toArray();
-        return NextResponse.json({ data: documents });
+        if (limit) {
+            const documents = await collection.find({}).sort({ _id: -1 }).limit(limit).toArray();
+            return NextResponse.json({ data: documents });
+
+        } else {
+            const documents = await collection.find({}).sort({ _id: -1 }).toArray();
+            return NextResponse.json({ data: documents });
+
+        }
     } catch (e) {
         console.error(e);
     }

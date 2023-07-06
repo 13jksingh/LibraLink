@@ -101,7 +101,13 @@ async function getLendData(date=false) {
                     title: "$bookData.title",
                     author: "$bookData.author",
                     bookCode: "$bookData.code",
-                    studentName: "$studentData.name" // Include the name from the joined collection
+                    studentName: "$studentData.name", // Include the name from the joined collection,
+                    returnedDate: 1
+                }
+            },
+            {
+                $match: {
+                    returnedDate: null
                 }
             }
         ];
@@ -128,6 +134,7 @@ async function getLendData(date=false) {
                 dueDate: formatDate(x.dueDate)
             };
         });
+        console.log(updatedDoc);
 
         return NextResponse.json({ data: updatedDoc }).json();
     } catch (e) {

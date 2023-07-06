@@ -5,6 +5,7 @@ import { BiLoaderCircle, BiErrorCircle } from "react-icons/bi";
 import { IconContext } from "react-icons";
 import { MdDone } from "react-icons/md";
 import Link from "next/link"
+import ReturnButton from "./returnButton";
 
 const ActionButton = ({
     id,
@@ -13,7 +14,9 @@ const ActionButton = ({
     handleEdit,
     handleCloseEdit,
     inputValue,
-    editDelete
+    editDelete,
+    del,
+    returnButton
 }) => {
     const [loading, setLoading] = useState({
         "edit": false,
@@ -147,20 +150,22 @@ const ActionButton = ({
                 :
                 <>
                     <div className="flex items-center justify-center gap-2 text-xl">
+                        {/* Return Buuton */}
+                        {returnButton && <ReturnButton id={id} />}
                         {/* View */}
-                        {editDelete? null :<Link
+                        {editDelete || del ? null :<Link
                             className="text-green-400 shadow-md border border-[#F9F9F9] dark:border-[#201C1D] p-1 rounded-md hover:border-[#78b9ff] transition"
                             href={`/${page}/${id}`}
                         >
                             <AiOutlineEye />
                         </Link>}
                         {/* Edit */}
-                        <button
+                        {del ? null : <button
                             className="text-blue-400 shadow-md border border-[#F9F9F9] dark:border-[#201C1D] p-1 rounded-md hover:border-[#78b9ff] transition"
                             onClick={handle_edit}
                         >
                             <AiOutlineEdit />
-                        </button>
+                        </button>}
                         {/* Delete */}
                         <button
                             className="text-red-400 shadow-md border border-[#F9F9F9] dark:border-[#201C1D] p-1 rounded-md hover:border-[#78b9ff] transition"

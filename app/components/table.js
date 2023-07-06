@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from "react";
 import ActionButton from "./actionButtons";
+import ReturnButton from "./returnButton";
 
 const Table = ({
   items,
@@ -14,6 +15,9 @@ const Table = ({
   narrowColumns,
   page,
   url,
+  editDelete,
+  del,
+  returnButton
 }) => {
   const truncateText = (text, limit) => {
     if (!text) {
@@ -114,6 +118,7 @@ const Table = ({
                     }}
                   >
                     {itemTitle[y] === "component" ? (
+                      y=="Action" ?
                       <ActionButton
                         id={x._id}
                         page={page}
@@ -121,7 +126,11 @@ const Table = ({
                         handleEdit={handleEdit}
                         handleCloseEdit={handleCloseEdit}
                         inputValue={inputValues || ""}
-                      />
+                        editDelete={editDelete}
+                        del={del}
+                        returnButton = {returnButton}
+                      /> :
+                      (y=="ReturnButton" ? <ReturnButton id={x._id} /> : null)
                       
                     ) : (
                       <>

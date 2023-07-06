@@ -23,7 +23,10 @@ const Card = ({
     icon,
     action,
     page,
-    url
+    url,
+    editDelete,
+    del,
+    returnButton
 }) => {
     const [showForm, setShowForm] = useState(false);
     const handleAddStudentClick = () => {
@@ -70,6 +73,9 @@ const Card = ({
                         narrowColumns={narrowColumns}
                         page={page}
                         url={url}
+                        editDelete={editDelete}
+                        del = {del}
+                        returnButton = {returnButton}
                     />
                 </div>
                 {seeMore && <a href={seeMore} className="flex justify-end text-[#F65867] text-sm font-semibold">See More</a>}
