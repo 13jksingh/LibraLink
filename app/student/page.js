@@ -5,24 +5,43 @@ import { AiOutlineMail, AiOutlinePhone } from "react-icons/ai"
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
 import AddForm from "../components/form";
+import Link from "next/link";
 
-async function getStudentData(limit = 4) {
+const ITEMS_PER_PAGE = 10;
+
+async function getStudentData(page = 1) {
     try {
-        // const limit =parseInt(request.nextUrl.searchParams.get('limit')) || 4;
         const client = await clientPromise;
         const db = client.db("LibraLink");
         const collection = db.collection('Student');
-        const documents = await collection.find({}).sort({ _id: -1 }).limit(limit).toArray();
+        const skip = (page - 1) * ITEMS_PER_PAGE;
+        const documents = await collection.find({}).sort({ _id: -1 }).skip(skip).limit(ITEMS_PER_PAGE).toArray();
         return NextResponse.json({ data: documents }).json();
     } catch (e) {
         console.log(e);
         throw new Error('Failed to fetch data');
     }
 }
-const Student = async () => {
+async function getTotalStudents(){
+    try {
+        const client = await clientPromise;
+        const db = client.db("LibraLink");
+        const collection = db.collection('Student');
+        const totalItems = await collection.countDocuments();
+        return NextResponse.json({ data: totalItems }).json();
+    } catch (e) {
+        console.log(e);
+        throw new Error('Failed to fetch data');
+    }
+}
+const Student = async (context) => {
+    const { searchParams: { page } } = context;
+    const parsedPage = page ? parseInt(page, 10) : 1;
     let baseUrl = "";
     process.env.VERCEL_URL ? baseUrl = "https://" + process.env.VERCEL_URL : baseUrl = "http://localhost:3000";
-    var { data: studentData } = await getStudentData(10);
+
+    var { data: studentData } = parsedPage ? await getStudentData(parsedPage) : await getStudentData(1);
+    const {data : totalItems } = await getTotalStudents();
     const studentDataTitles = {
         "ID":
             { "alise": "studentId", "icon": <BsPersonVcard />, "type": "text" },
@@ -61,6 +80,10 @@ const Student = async () => {
                 narrowColumns={["ID"]}
                 page="student"
                 url="/student"
+                pagination
+                prevLink={`/student?page=${parsedPage > 1 ? parsedPage - 1 : Math.ceil(totalItems / ITEMS_PER_PAGE)}`}
+                nextLink={`/student?page=${parsedPage < Math.ceil(totalItems / ITEMS_PER_PAGE)  ? parsedPage + 1 : 1}`}
+                navigationText={`${(parsedPage-1)*10 + 1}-${Math.min((parsedPage-1)*10 + 10 ,totalItems)} of ${totalItems}`}
             />
         </div>
     );

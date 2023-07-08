@@ -3,6 +3,8 @@ import { useState } from "react";
 import Button from "./Button";
 import Table from "./table";
 import AddForm from "./form";
+import Link from "next/link";
+import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from "react-icons/md"
 
 const Card = ({
     listItems,
@@ -26,7 +28,11 @@ const Card = ({
     url,
     editDelete,
     del,
-    returnButton
+    returnButton,
+    pagination,
+    nextLink,
+    prevLink,
+    navigationText
 }) => {
     const [showForm, setShowForm] = useState(false);
     const handleAddStudentClick = () => {
@@ -36,7 +42,27 @@ const Card = ({
         return (
             <div className="w-full rounded-xl dark:bg-[#353334] dark:text-white bg-white px-8 py-7">
                 <div className="flex justify-between items-center">
-                    <h1 className="text-2xl font-semibold">{title}</h1>
+                    {title && <h1 className="text-2xl font-semibold">{title}</h1>}
+                    {pagination &&
+                        <div className="flex items-center">
+                            <div className="flex items-center justify-center text-xl">
+                                <button className="hover:bg-[#F9F9F9] rounded-full p-2 dark:hover:bg-[#201C1D] transition">
+                                    <Link href={prevLink}>
+                                        <MdOutlineNavigateBefore />
+                                    </Link>
+                                </button>
+                                <button className="hover:bg-[#F9F9F9] rounded-full p-2 dark:hover:bg-[#201C1D] transition">
+                                    <Link href={nextLink}>
+                                        <MdOutlineNavigateNext />
+                                    </Link>
+                                </button>
+                            </div>
+                            <div className="text-sm">
+                                {navigationText}
+                            </div>
+                        </div>
+
+                    }
                     {buttonTitle && (
                         <div className="relative">
                             <Button title={buttonTitle} onClick={handleAddStudentClick} />
@@ -74,8 +100,8 @@ const Card = ({
                         page={page}
                         url={url}
                         editDelete={editDelete}
-                        del = {del}
-                        returnButton = {returnButton}
+                        del={del}
+                        returnButton={returnButton}
                     />
                 </div>
                 {seeMore && <a href={seeMore} className="flex justify-end text-[#F65867] text-sm font-semibold">See More</a>}
