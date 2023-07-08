@@ -3,7 +3,10 @@ import { useState } from "react";
 import ActionButton from "@/app/components/actionButtons";
 const BookDetail = ({
     bookData,
-    id
+    id,
+    overdueCount,
+    currentlyLentCount,
+    totalStudentsLent
 }) => {
     const [edit, setEdit] = useState(false); // State to store the currently edited ID
     const [inputValues, setInputValues] = useState({}); // State to store the input values for each column
@@ -46,8 +49,8 @@ const BookDetail = ({
                     handleEdit={handleEdit}
                     handleCloseEdit={handleCloseEdit}
                     inputValue={inputValues || ""}
-                    page="student"
-                    url="/student"
+                    page="book"
+                    url="/book"
                     editDelete
                 />
             </div>
@@ -108,50 +111,34 @@ const BookDetail = ({
                         )}
                     </div>
                     <div className="">
-                        <p className="font-semibold dark:text-[#ffffffa9]">Total Copies</p>
+                        <p className="font-semibold dark:text-[#ffffffa9]">Total Books</p>
                         {edit ? (
                             <input
-                                id={`myText-${id}-email`}
-                                type="text"
+                                id={`myText-${id}-copies`}
+                                type="number"
                                 className="w-auto text-center lg:text-left"
                                 style={{ border: "none", background: "transparent", outline: "0" }}
-                                value={inputValues["author"] || ""}
-                                onChange={(e) => handleInputChange("author", e.target.value)}
-                                placeholder={bookData.author}
+                                value={inputValues["copies"] || ""}
+                                onChange={(e) => handleInputChange("copies", e.target.value)}
+                                placeholder={bookData.copies}
                             />
                         ) : (
-                            <p>15</p>
+                            <p>{bookData.copies}</p>
                         )}
                     </div>
-                    {/* <div className="">
-                        <p className="font-semibold dark:text-[#ffffffa9]">Description</p>
-                        {edit ? (
-                            <input
-                                id={`myText-${id}-phone`}
-                                type="text"
-                                className="w-auto text-center lg:text-left"
-                                style={{ border: "none", background: "transparent", outline: "0" }}
-                                value={inputValues["description"] || ""}
-                                onChange={(e) => handleInputChange("description", e.target.value)}
-                                placeholder={bookData.description}
-                            />
-                        ) : (
-                            <p>{bookData.description}</p>
-                        )}
-                    </div> */}
                 </div>
                 <div className="flex flex-col justify-between text-lg gap-3 w-full">
                     <div className="">
-                        <p className="font-semibold dark:text-[#ffffffa9]">Total Copies Lent</p>
-                        <p>15</p>
+                        <p className="font-semibold dark:text-[#ffffffa9]">Total Students Lent</p>
+                        <p>{totalStudentsLent+currentlyLentCount}</p>
                     </div>
                     <div className="">
                         <p className="font-semibold dark:text-[#ffffffa9]">Books Currently Lent</p>
-                        <p className="text-green-800 dark:text-green-400">7</p>
+                        <p className="text-green-500 dark:text-green-400">{currentlyLentCount}</p>
                     </div>
                     <div className="">
                         <p className="font-semibold dark:text-[#ffffffa9]">Overdue Books Count</p>
-                        <p className="text-red-800 dark:text-red-400">5</p>
+                        <p className="text-red-500 dark:text-red-400">{overdueCount}</p>
                     </div>
                 </div>
             </div>

@@ -159,7 +159,7 @@ const BookView = async ({ params: { id } }) => {
         <>
             {bookData ?
                 <>
-                    <BookDetail bookData={bookData} id={id} />
+                    <BookDetail bookData={bookData} id={id} overdueCount={overdueData.length} currentlyLentCount={lendData.length} totalStudentsLent={returnedData.length} />
                     <div className="w-full rounded-xl dark:bg-[#353334] dark:text-white bg-white px-8 py-7 mt-6">
                         <IssueBook id={id} />
                     </div>

@@ -8,6 +8,12 @@ export default function SearchBox() {
     const fetcher = (...args) => fetch(...args).then(res => res.json())
 
     const [searchQuery, setSearchQuery] = useState('');
+    const [isFocus, setFocus] = useState('true');
+
+    const clear = () => {
+        setSearchQuery('');
+    }
+
     const handleInputChange = (e) => {
         setSearchQuery(e.target.value);
     };
@@ -16,7 +22,7 @@ export default function SearchBox() {
         fetcher
     );
     return (
-        <div className='hidden lg:block'>
+        <div className='relative hidden lg:block' onFocus={() => setFocus(true)} >
             <div className='flex items-center relative'>
                 <input
                     type="text"
@@ -26,13 +32,17 @@ export default function SearchBox() {
                     onChange={handleInputChange}
                 />
                 {isLoading ? <VscLoading className='animate-spin absolute right-3 text-gray-500' /> :
-                    <button onClick={()=>setSearchQuery('')} class="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none">
+                    <button onClick={() => setSearchQuery('')} className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none">
                         <MdOutlineClear className='text-xl' />
                     </button>
                 }
             </div>
+            {searchQuery && data && isFocus && (
+                <div onBlur={() => {setFocus(false);console.log("blurred");}}>
+                    <SearchRes data={data} handleClick={clear} />
+                </div>)}
 
-            {searchQuery && data && <SearchRes data={data} />}
+            {/* {searchQuery && data && isFocus && <SearchRes data={data} />} */}
         </div>
     );
 }

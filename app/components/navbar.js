@@ -20,7 +20,9 @@ const Navbar = () => {
                 <h1>LibraLink</h1>
             </div>
             {/* Search Box */}
-            <SearchBox />
+            <div>
+                <SearchBox />
+            </div>
             {/* Dark Mode */}
             <div className="flex gap-3 items-center md:gap-5">
                 <RevalidateButton url="all" />

@@ -2,26 +2,18 @@
 import { useEffect, useState } from "react";
 import { IconContext } from "react-icons";
 import { BiLoaderCircle } from "react-icons/bi"
+import {AiOutlineInfoCircle} from "react-icons/ai"
+import useSWR from 'swr';
 const IssueBook = ({ id }) => {
-    const [bookData, setBookData] = useState([]);
-    const [dueDate, setDueDate] = useState("");
+    const fetcher = (...args) => fetch(...args).then(res => res.json())
+
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
-
-    useEffect(() => {
-        const fetchBookData = async () => {
-            try {
-                const response = await fetch("/api/book");
-                const data = await response.json();
-                setBookData(data.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchBookData();
-    }, []);
+    const { data, error : studentLodingerror, isLoading } = useSWR(
+        "/api/book",
+        fetcher
+      );
 
     const handleIssue = async (event) => {
         setLoading(true);
@@ -35,7 +27,6 @@ const IssueBook = ({ id }) => {
                 body: JSON.stringify({
                     "bookId": bookId,
                     "studentId": id,
-                    "dueDate": dueDate
                 }),
                 headers: {
                     "Content-Type": "application/json",
@@ -64,31 +55,31 @@ const IssueBook = ({ id }) => {
 
     return (
         <div>
+            <div className="flex flex-col sm:flex-row items-center pb-5 justify-between">
+                <h1 className="text-2xl font-bold ">
+                    Issue Book
+                </h1>
+                <p className="flex items-center gap-1"><AiOutlineInfoCircle />Book issued for 15 days</p>
+            </div>
+
             {success && <p className="text-green-400">Issued Book</p>}
             {error && <p className="text-red-400">Error occoured</p>}
-            <form action="/api/issue-book" method="POST" onSubmit={handleIssue}>
-                <select name="books" id="book">
-                    {bookData.map((x) => (
+            {isLoading ? <h1 className="text-center text-xl font-semibold">Loading ...</h1> : <form action="/api/issue-book" method="POST" onSubmit={handleIssue} className="flex justify-center items-center gap-2">
+                <select name="books" id="book" className="text-xl rounded-xl p-2 shadow border">
+                    {data?.data.map((x) => (
                         <option value={x._id} key={x._id}>
                             {x.title}
                         </option>
                     ))}
                 </select>
-                <input
-                    type="date"
-                    name="dueDate"
-                    placeholder="Due Date"
-                    value={dueDate}
-                    onChange={(e) => setDueDate(e.target.value)}
-                />
-                <button type="submit">
+                <button type="submit" className="border rounded-xl p-2 shadow text-[#F65867] w-20 h-10 text-center">
                     {loading ?
-                        <IconContext.Provider value={{ className: "animate-spin text-yellow-400" }}>
+                        <IconContext.Provider value={{ className: "animate-spin w-full text-xl" }}>
                             <BiLoaderCircle />
                         </IconContext.Provider> :
                         "Issue"}
                 </button>
-            </form>
+            </form>}
         </div>
     );
 };

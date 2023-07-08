@@ -8,31 +8,17 @@ import IssueBook from "./issueBook";
 
 async function getStudentData(id) {
     try {
-        const oid = new ObjectId(id);
         const client = await clientPromise;
         const db = client.db("LibraLink");
         const collection = db.collection('Student');
-        const documents = await collection.findOne({ _id: oid });
+        const documents = await collection.findOne({ _id: new ObjectId(id) });
         return NextResponse.json({ data: documents }).json();
     } catch (e) {
         console.log(e);
         throw new Error('Failed to fetch data');
     }
 }
-async function getBookData(limit = 4) {
-    try {
-        // const limit =parseInt(request.nextUrl.searchParams.get('limit')) || 4;
-        const client = await clientPromise;
-        const db = client.db("LibraLink");
-        const collection = db.collection('Book');
-        const documents = await collection.find({}).sort({ _id: -1 }).limit(limit).toArray();
-        return NextResponse.json({ data: documents }).json();
-    } catch (e) {
-        throw new Error('Failed to fetch data');
-    }
-}
-
-async function getLendData(id) {
+async function getLendData(id, type) {
     try {
         const client = await clientPromise;
         const db = client.db("LibraLink");
@@ -40,7 +26,9 @@ async function getLendData(id) {
 
         const pipeline = [
             {
-                $match: { studentId: new ObjectId(id) } // Match documents with the specified studentId
+                $match: {
+                    studentId: new ObjectId(id) // Match documents with the specified bookId
+                }
             },
             {
                 $lookup: {
@@ -51,44 +39,88 @@ async function getLendData(id) {
                 }
             },
             {
-                $unwind: "$bookData" // Flatten the bookData array
-            },
-            {
                 $project: {
                     _id: 1,
                     studentId: 1,
                     issueDate: 1,
                     dueDate: 1,
-                    title: "$bookData.title", // Include the title from the joined collection
-                    author: "$bookData.author", // Include the author from the joined collection
-                    bookCode: "$bookData.code" // Include the author from the joined collection
+                    title: "$bookData.title",
+                    name: "$studentData.name", // Include the student name from the joined collection
+                    author: "$bookData.author", // Include the student phone from the joined collection
+                    bookCode: "$bookData.code", // Include the student email from the joined collection
+                    returnedDate: 1
                 }
             }
         ];
+        if (type === "lendData") {
+            pipeline.push({
+                $match: {
+                    returnedDate: null
+                }
+            });
+        } else if (type === "overdueData") {
+            const currentDate = new Date();
+            pipeline.push({
+                $match: {
+                    returnedDate: null,
+                    dueDate: { $lt: currentDate }
+                }
+            });
+        } else if (type === "returnedData") {
+            pipeline.push({
+                $match: {
+                    returnedDate: { $ne: null }
+                }
+            });
+        }
 
         const documents = await lendCollection.aggregate(pipeline).toArray();
-        const updatedDoc = documents.map(x => {
-            const formatDate = (date) =>
-                `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })}, ${date.getFullYear()}`;
-            return {
-                ...x,
-                issueDate: formatDate(x.issueDate),
-                dueDate: formatDate(x.dueDate)
-            };
-        });
+        if (type === "returnedData") {
+            const updatedDoc = documents.map(x => {
+                const formatDate = date =>
+                    `${date.getDate()} ${date.toLocaleString("default", {
+                        month: "long"
+                    })}, ${date.getFullYear()}`;
+                return {
+                    ...x,
+                    issueDate: formatDate(x.issueDate),
+                    dueDate: formatDate(x.dueDate),
+                    returnedDate: formatDate(x.returnedDate)
+                };
+            });
+            return NextResponse.json({ data: updatedDoc }).json();
 
-        return NextResponse.json({ data: updatedDoc }).json();
+        } else {
+            const updatedDoc = documents.map(x => {
+                const formatDate = date =>
+                    `${date.getDate()} ${date.toLocaleString("default", {
+                        month: "long"
+                    })}, ${date.getFullYear()}`;
+                return {
+                    ...x,
+                    issueDate: formatDate(x.issueDate),
+                    dueDate: formatDate(x.dueDate),
+                };
+            });
+            return NextResponse.json({ data: updatedDoc }).json();
+
+        }
+
+
     } catch (e) {
         console.log(e);
         throw new Error("Failed to fetch data");
     }
 }
 
+
 const StudentView = async ({ params: { id } }) => {
     const { data: studentData } = await getStudentData(id);
-    const { data: lendData } = await getLendData(id);
-    console.log(lendData, "lund")
-    const lendTitles = {
+    const { data: lendData } = await getLendData(id, "lendData");
+    const { data: overdueData } = await getLendData(id, "overdueData");
+    const { data: returnedData } = await getLendData(id, "returnedData");
+
+    const dataTitles = {
         "BookCode":
             { "alise": "bookCode" },
         "Title":
@@ -99,26 +131,62 @@ const StudentView = async ({ params: { id } }) => {
             { "alise": "issueDate" },
         "Due Date":
             { "alise": "dueDate" },
+        "Return Date":
+            { "alise": "returnedDate" },
         "Action": "component"
     }
+    const { "Return Date": omittedField, ...currentlyDataTitles } = dataTitles;
+    const { ...filteredDataTitles } = dataTitles;
     return (
         <>
             {studentData ?
                 <>
-                    <StudentDetail studentData={studentData} id={id} />
+                    <StudentDetail studentData={studentData} id={id} overdueCount={overdueData.length} currentlyLentCount={lendData.length} lendCount={returnedData.length} />
                     <div className="w-full rounded-xl dark:bg-[#353334] dark:text-white bg-white px-8 py-7 mt-6">
                         <IssueBook id={id} />
                     </div>
                     <div className="mt-6">
                         <Card
+                            title="Currently Issued"
                             listItems
                             items={lendData}
-                            itemTitle={lendTitles}
+                            itemTitle={currentlyDataTitles}
                             paddingReq="20px"
                             headingBgColor
                             narrowColumns={["ID"]}
                             page="lend"
                             url="/lend"
+                            del
+                            returnButton
+                        />
+                    </div>
+                    <div className="mt-6">
+                        <Card
+                            title="Overdue"
+                            listItems
+                            items={overdueData}
+                            itemTitle={currentlyDataTitles}
+                            paddingReq="20px"
+                            headingBgColor
+                            narrowColumns={["ID"]}
+                            page="lend"
+                            url="/lend"
+                            del
+                            returnButton
+                        />
+                    </div>
+                    <div className="mt-6">
+                        <Card
+                            title="Returned"
+                            listItems
+                            items={returnedData}
+                            itemTitle={filteredDataTitles}
+                            paddingReq="20px"
+                            headingBgColor
+                            narrowColumns={["ID"]}
+                            page="lend"
+                            url="/lend"
+                            del
                         />
                     </div>
                 </>

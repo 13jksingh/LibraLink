@@ -3,7 +3,10 @@ import { useState } from "react";
 import ActionButton from "@/app/components/actionButtons";
 const StudentDetail = ({
     studentData,
-    id
+    id,
+    overdueCount,
+    currentlyLentCount,
+    lendCount
 }) => {
     const [edit, setEdit] = useState(false); // State to store the currently edited ID
     const [inputValues, setInputValues] = useState({}); // State to store the input values for each column
@@ -112,15 +115,15 @@ const StudentDetail = ({
                 <div className="flex flex-col justify-between text-lg gap-3 w-full">
                     <div className="">
                         <p className="font-semibold dark:text-[#ffffffa9]">Total Books Lent</p>
-                        <p>15</p>
+                        <p>{lendCount+currentlyLentCount}</p>
                     </div>
                     <div className="">
                         <p className="font-semibold dark:text-[#ffffffa9]">Books Currently Lent</p>
-                        <p className="text-green-800 dark:text-green-400">7</p>
+                        <p className="text-green-500 dark:text-green-400">{currentlyLentCount}</p>
                     </div>
                     <div className="">
                         <p className="font-semibold dark:text-[#ffffffa9]">Overdue Books Count</p>
-                        <p className="text-red-800 dark:text-red-400">5</p>
+                        <p className="text-red-500 dark:text-red-400">{overdueCount}</p>
                     </div>
                 </div>
             </div>

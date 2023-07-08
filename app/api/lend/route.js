@@ -34,7 +34,7 @@ export async function POST(request) {
       }
 
       const dueDate = new Date();
-      dueDate.setDate(dueDate.getDate() + 7)
+      dueDate.setDate(dueDate.getDate() + 15)
   
       // Prepare the lend document
       const lendDocument = {
