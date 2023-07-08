@@ -89,7 +89,7 @@ async function getLendData(id, type) {
             });
         }
 
-        const documents = await lendCollection.aggregate(pipeline).toArray();
+        const documents = await lendCollection.aggregate(pipeline).sort({ _id: -1 }).toArray();
         if (type==="returnedData"){
             const updatedDoc = documents.map(x => {
                 const formatDate = date =>
@@ -131,7 +131,6 @@ async function getLendData(id, type) {
 
 const BookView = async ({ params: { id } }) => {
     const { data: bookData } = await getBookData(id);
-    console.log(bookData);
     const { data: lendData } = await getLendData(id, "lendData");
     const { data: overdueData } = await getLendData(id, "overdueData");
     const { data: returnedData } = await getLendData(id, "returnedData");

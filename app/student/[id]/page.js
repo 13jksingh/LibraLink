@@ -74,7 +74,7 @@ async function getLendData(id, type) {
             });
         }
 
-        const documents = await lendCollection.aggregate(pipeline).toArray();
+        const documents = await lendCollection.aggregate(pipeline).sort({ _id: -1 }).toArray();
         if (type === "returnedData") {
             const updatedDoc = documents.map(x => {
                 const formatDate = date =>

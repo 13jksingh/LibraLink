@@ -122,7 +122,7 @@ async function getLendData(date=false) {
             });
         }
 
-        const documents = await lendCollection.aggregate(pipeline).toArray();
+        const documents = await lendCollection.aggregate(pipeline).sort({ _id: -1 }).toArray();
         const updatedDoc = documents.map(x => {
             const formatDate = (date) =>
                 `${date.getDate()} ${date.toLocaleString("default", {
