@@ -15,7 +15,7 @@ const ReturnButton = ({ id }) => {
         setSuccess(false);
         setError(false);
         try {
-            const response = await fetch(`/api/lend/return?id=${id}`, {
+            const response = await fetch(`/api/lend?id=${id}`, {
                 method: 'PUT'
             });
             const data = await response.json();

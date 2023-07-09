@@ -76,3 +76,26 @@ export async function DELETE(request) {
       console.error(e);
     }
   }  
+  export async function PUT(request) {
+    try {
+        const id = request.nextUrl.searchParams.get('id'); // Retrieve the student ID from the request query
+
+        const client = await clientPromise;
+        const db = client.db("LibraLink");
+        const collection = db.collection('Lend');
+
+        const returned = await collection.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: {returnedDate:new Date()} }
+        );
+        console.log(returned);
+
+        if (returned.modifiedCount === 1) {
+            return NextResponse.json({ message: 'Book returned successfully' });
+        } else {
+            return NextResponse.json({ message: 'Book lend info not found' }, { status: 404 });
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
