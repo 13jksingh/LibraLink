@@ -16,8 +16,8 @@ const Navbar = () => {
         <nav className="h-15 p-5 px-10 flex justify-between items-center text-3xl">
             {/* Logo and Heading */}
             <div className="flex gap-10 font-bold items-center">
-                <HiOutlineLibrary className="hidden sm:block" />
-                <h1>LibraLink</h1>
+                <HiOutlineLibrary />
+                <h1 className="hidden sm:block" >LibraLink</h1>
             </div>
             {/* Search Box */}
             <div>

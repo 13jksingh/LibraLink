@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.15",
+    "@hookform/error-message": "^2.0.1",
     "autoprefixer": "10.4.14",
     "date-fns": "^2.30.0",
     "mongodb": "^5.6.0",

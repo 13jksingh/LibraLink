@@ -1,32 +1,30 @@
 'use client'
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { ErrorMessage } from "@hookform/error-message"
+import { useRouter } from 'next/navigation'
+import CustomButton from "./CustomButton";
+
 const AddForm = ({
     itemTitle,
-    apiPostPath,
-    name,
     title,
-    inputClass,
-    inputBoxClass,
-    formClass,
-    buttonBoxClass,
-    buttonClass,
-    divClass,
-    inputBoxesDivClass,
-    titleClass,
     url
 }) => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, formState: { errors }, handleSubmit } = useForm({
+        criteriaMode: "all"
+    });;
     const [loading, setLoading] = useState(false);
     const [sucess, setSuccess] = useState(false);
     const [failure, setFailure] = useState(false);
+
+    const router = useRouter()
 
     const onSubmit = async (data, e) => {
         setLoading(true);
         setSuccess(false);
         setFailure(false);
         try {
-            const response = await fetch(apiPostPath, {
+            const response = await fetch(`/api/${url}`, {
                 method: "POST",
                 mode: "no-cors",
                 headers: {
@@ -38,11 +36,13 @@ const AddForm = ({
 
             if (response.ok) {
                 console.log("Form submitted successfully");
+                await fetch(`/api/revalidate?path=${url}`);
                 e.target.reset();
-                const revalidate = await fetch(`/api/revalidate?path=${url}`);
-                console.log(revalidate);
                 setSuccess(true);
-                window.location.reload();
+                router.refresh()
+                setTimeout(() => {
+                    setSuccess(false);
+                }, 1000);
             } else {
                 setFailure(true);
                 console.error("Form submission failed");
@@ -54,78 +54,60 @@ const AddForm = ({
         setLoading(false);
     };
 
-    return (<div className={divClass}>
-        {sucess && <p className="text-green-400 text-sm">{name} added successfully</p>}
-        {failure && <p className="text-red-400 text-sm">Error occoured, try again later</p>}
-        <h1 className={titleClass}>{title}</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className={formClass}>
-            <div className={inputBoxesDivClass}>
-                {Object.keys(itemTitle)
-                    .filter(y => itemTitle[y].alise)
-                    .map(y => (
-                        <div className={inputBoxClass} key={y}>
-                            <label htmlFor={itemTitle[y].alise}>{itemTitle[y].icon}</label>
-                            <input
-                                className={inputClass}
-                                type={itemTitle[y].type}
-                                id={itemTitle[y].alise}
-                                placeholder={y}
-                                {...register(itemTitle[y].alise, { required: true })}
+    return (
+        <div >
+            {sucess && <p className="text-green-400 text-sm">{url.charAt(0).toUpperCase() + url.slice(1)} added successfully</p>}
+            {failure && <p className="text-red-400 text-sm">Error occoured, try again later</p>}
+            <h1 className="text-xl font-bold px-4 py-2">{title}</h1>
+            <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+                <div className="w-full grid xl:grid-cols-4 md:grid-cols-2 gap-2 text-lg py-4 pb-6 justify-items-center overflow-hidden">
+                    {itemTitle.map((x) => (
+                        <div className="flex flex-col items-center gap-2" key={x.key}>
+                            <div className="flex items-center gap-1">
+                                <label htmlFor={x.label}>{x.icon}</label>
+                                <input
+                                    className="rounded-xl px-2 py-1 dark:bg-[#201C1D] bg-[#F9F9F9]"
+                                    type={x.type}
+                                    id={x.key}
+                                    placeholder={x.label}
+                                    {...register(x.key, {
+                                        required: "This is required.",
+                                        pattern: {
+                                            value: x.type === "number" ? /^\d+$/ : /^[a-zA-Z]+$/,
+                                            message: x.type === "number" ? "This input is number only." : "This input is letter only.",
+                                        },
+                                        maxLength: {
+                                            value: 10,
+                                            message: "This input exceed maxLength.",
+                                        },
+                                    })}
+                                />
+
+                            </div>
+                            <ErrorMessage
+                                errors={errors}
+                                name={x.key}
+                                render={({ messages }) =>
+                                    messages &&
+                                    Object.entries(messages).map(([type, message]) => (
+                                        <p key={type} className="text-sm text-left w-full px-3">{message}</p>
+                                    ))
+                                }
                             />
-                            {errors[itemTitle[y].alise] && <p className="text-xs text-center">{y} is required</p>}
                         </div>
                     ))}
-            </div>
-            {/* <div className="flex items-center">
-                <label htmlFor="studentId"><BsPersonVcard /></label>
-                <input
-                    className="focus:outline-none rounded-md dark:bg-[#353334] w-40 px-2 mx-2"
-                    type="text"
-                    id="studentId"
-                    placeholder="Student Id"
-                    {...register("studentId", { required: true })}
-                />
-                {errors.studentId && <span>Student ID is required</span>}
-            </div>
-
-            <div className="flex items-center">
-                <label htmlFor="name"><CiUser /></label>
-                <input
-                    className="focus:outline-none rounded-md dark:bg-[#353334] w-40 px-2 mx-2"
-                    type="text"
-                    id="name"
-                    placeholder="Name"
-                    {...register("name", { required: true })}
-                />
-                {errors.name && <span>Name is required</span>}
-            </div>
-            <div className="flex items-center">
-                <label htmlFor="email"><AiOutlineMail /></label>
-                <input
-                    className="focus:outline-none rounded-md dark:bg-[#353334] w-40 px-2 mx-2"
-                    type="email"
-                    id="email"
-                    placeholder="Email"
-                    {...register("email", { required: true })}
-                />
-                {errors.email && <span>Email is required</span>}
-            </div>
-            <div className="flex items-center">
-                <label htmlFor="phone"><AiOutlinePhone /></label>
-                <input
-                    className="focus:outline-none rounded-md dark:bg-[#353334] w-40 px-2 mx-2"
-                    type="tel"
-                    id="phone"
-                    placeholder="Phone Number"
-                    {...register("phone", { required: true })}
-                />
-                {errors.phone && <span>Phone Number is required</span>}
-            </div> */}
-            <div className={buttonBoxClass}>
-                <button type="submit" disabled={loading} className={buttonClass}>{loading ? "Loading..." : "Submit"}</button>
-            </div>
-        </form>
-    </div>
+                </div>
+                <div className="w-full text-center">
+                    <CustomButton
+                        action={onSubmit}
+                        icon="Submit"
+                        style="bg-[#F65867] rounded-xl text-white px-10 py-1"
+                        feedback={false}
+                        isSubmitButton
+                    />
+                </div>
+            </form>
+        </div>
     );
 };
 

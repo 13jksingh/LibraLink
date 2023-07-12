@@ -1,7 +1,9 @@
 'use client'
-const Button = (props) => {
+const Button = ({
+    title,
+    onClickEvent
+}) => {
     return ( 
-        // <button className="">{props.title}</button>
         <button className="
         text-sm
         dark:bg-white
@@ -15,8 +17,8 @@ const Button = (props) => {
         dark:hover:bg-[#e5e7eb]
         transition 
         " 
-        onClick={props.onClick}>
-        {props.title}
+        onClick={onClickEvent}>
+        {title}
         </button>
      );
 }

@@ -9,13 +9,6 @@ export default function DropDownNav() {
     const handleDropdownToggle = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
-    const getLinkClass = (index) => {
-        let linkClass = "";
-        // if (active === index) {
-        //     linkClass += "text-[#F65867]";
-        // }
-        return linkClass;
-    };
     return (
         <div className="md:hidden">
             {isDropdownOpen ? <AiOutlineMenuFold onClick={handleDropdownToggle} /> : <AiOutlineMenu onClick={handleDropdownToggle} />}

@@ -9,37 +9,38 @@ import { AiOutlineMail, AiOutlinePhone } from "react-icons/ai"
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from 'next/server';
 import Time from "./time";
+import SmallCard from "./smallCard";
 
-async function getBookCount(date=false) {
+async function getBookCount(date = false) {
     try {
-      const client = await clientPromise;
-      const db = client.db('LibraLink');
-      const lendCollection = db.collection('Lend');
-  
-      const pipeline = [];
-  
-      if (date) {
-        const currentDate = new Date();
+        const client = await clientPromise;
+        const db = client.db('LibraLink');
+        const lendCollection = db.collection('Lend');
+
+        const pipeline = [];
+
+        if (date) {
+            const currentDate = new Date();
+            pipeline.push({
+                $match: {
+                    dueDate: { $lt: currentDate }
+                }
+            });
+        }
+
         pipeline.push({
-          $match: {
-            dueDate: { $lt: currentDate }
-          }
+            $count: 'BookCount'
         });
-      }
-  
-      pipeline.push({
-        $count: 'BookCount'
-      });
-  
-      const result = await lendCollection.aggregate(pipeline).toArray();
-      const bookCount = result.length > 0 ? result[0].BookCount : 0;
-  
-      return NextResponse.json({ count: bookCount }).json();
+
+        const result = await lendCollection.aggregate(pipeline).toArray();
+        const bookCount = result.length > 0 ? result[0].BookCount : 0;
+
+        return NextResponse.json({ count: bookCount }).json();
     } catch (e) {
-      console.log(e);
-      throw new Error('Failed to fetch data');
+        console.log(e);
+        throw new Error('Failed to fetch data');
     }
-  }
+}
 
 async function getStudentData(limit = 4) {
     try {
@@ -63,7 +64,7 @@ async function getBookData(limit = 4) {
         throw new Error('Failed to fetch data');
     }
 }
-async function getLendData(date=false) {
+async function getLendData(date = false) {
     try {
         const client = await clientPromise;
         const db = client.db("LibraLink");
@@ -207,10 +208,10 @@ const Dashboard = async () => {
             {/* <h1 className="py-3 font-semibold">{month} {date}, {year} | {day}, {hours}:{minutes}</h1> */}
             <Time />
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-6">
-                <Card count="1223" title="Total Visitors" icon={<HiOutlineUsers />} />
-                <Card count={count} title="Borrowed Books" icon={<MdOutlineLibraryBooks />} />
-                <Card count={overdueCount} title="Overdue Books" icon={<GiSandsOfTime />} />
-                <Card count="60" title="New Members" icon={<AiOutlineUserAdd />} />
+                <SmallCard count="1223" title="Total Visitors" icon={<HiOutlineUsers />} />
+                <SmallCard count={count} title="Borrowed Books" icon={<MdOutlineLibraryBooks />} />
+                <SmallCard count={overdueCount} title="Overdue Books" icon={<GiSandsOfTime />} />
+                <SmallCard count="60" title="New Members" icon={<AiOutlineUserAdd />} />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Card
