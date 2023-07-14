@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb";
 
 export async function GET(request) {
     try {
-        const limit =parseInt(request.nextUrl.searchParams.get('limit'));
+        const limit = parseInt(request.nextUrl.searchParams.get('limit'));
         const client = await clientPromise;
         const db = client.db("LibraLink");
         const collection = db.collection('Book');
@@ -42,23 +42,27 @@ export async function POST(request) {
 export async function DELETE(request) {
     // console.log(request);
     try {
-    //   const { id } = request.query; // Retrieve the student ID from the request query
-      const id = request.nextUrl.searchParams.get('id');
-      const deleteId = new ObjectId(id);
-      const client = await clientPromise;
-      const db = client.db("LibraLink");
-      const collection = db.collection('Book');
-  
-      const result = await collection.deleteOne({ _id: deleteId });
-      // Return the deletion result
-      console.log(result);
-      return NextResponse.json(result);
-    } catch (e) {
-      console.error(e);
-    }
-  }  
+        //   const { id } = request.query; // Retrieve the student ID from the request query
+        const id = request.nextUrl.searchParams.get('id');
+        const deleteId = new ObjectId(id);
+        const client = await clientPromise;
+        const db = client.db("LibraLink");
+        const collection = db.collection('Book');
 
-  export async function PUT(request) {
+        const lendCollection = db.collection('Lend');
+
+        const [book , lend] = await Promise.all([
+            collection.deleteOne({ _id: deleteId }),
+            lendCollection.deleteMany({ bookId: deleteId })
+        ])
+        console.log(book,lend);
+        return NextResponse.json({ book: book,lend:lend});
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export async function PUT(request) {
     try {
         const id = request.nextUrl.searchParams.get('id'); // Retrieve the student ID from the request query
         const updatedFields = await request.json(); // Retrieve the updated fields from the request body

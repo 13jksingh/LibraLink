@@ -37,19 +37,19 @@ export async function POST(request) {
 }
 
 export async function DELETE(request) {
-    // console.log(request);
     try {
-        //   const { id } = request.query; // Retrieve the student ID from the request query
         const id = request.nextUrl.searchParams.get('id');
         const deleteId = new ObjectId(id);
         const client = await clientPromise;
         const db = client.db("LibraLink");
         const collection = db.collection('Student');
+        const lendCollection = db.collection('Lend');
 
-        const result = await collection.deleteOne({ _id: deleteId });
-        // Return the deletion result
-        console.log(result);
-        return NextResponse.json(result);
+        await Promise.all([
+            collection.deleteOne({ _id: deleteId }),
+            lendCollection.deleteMany({studentId:deleteId})
+        ])
+        return NextResponse.json({deleted:true});
     } catch (e) {
         console.error(e);
     }
