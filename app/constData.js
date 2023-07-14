@@ -38,3 +38,29 @@ export const StudentAttributesInfo = [
     { label: "Email", key: "email", icon: <AiOutlineMail />, type: "text" },
     { label: "Phone Number", key: "phone", icon: <AiOutlinePhone />, type: "text" },
 ]
+
+export const lendAttributesInfoDashboard = [
+    { label: "Student Name", key: "studentName"},
+    { label: "Book Code", key: "bookCode"},
+    { label: "Author", key: "author"},
+    { label: "Issue Date", key: "issueDate"},
+    { label: "Due Date", key: "dueDate"},
+]
+
+export const lendAttributesInfoStudent = [
+    { label: "Book Code", key: "bookCode"},
+    { label: "Title", key: "title"},
+    { label: "Author", key: "author"},
+    { label: "Issue Date", key: "issueDate"},
+    { label: "Due Date", key: "dueDate"},
+    { label: "Return Date" , key: "returnedDate"}
+]
+
+export const lendAttributesInfoBook = [
+    { label: "Student Id", key: "sid"},
+    { label: "Name", key: "studentName"},
+    { label: "Phone Number", key: "phone"},
+    { label: "Issue Date", key: "issueDate"},
+    { label: "Due Date", key: "dueDate"},
+    { label: "Return Date" , key: "returnedDate"}
+]

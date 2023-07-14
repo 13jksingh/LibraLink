@@ -1,9 +1,13 @@
 'use client'
 import { useState } from "react";
-import ActionButton from "@/app/components/actionButtons";
+// import ActionButton from "@/app/components/actionButtons";
+import ActionButton from "@/app/components/actionButton";
 const StudentDetail = ({
-    studentData,
     id,
+    name,
+    studentId,
+    email,
+    phone,
     overdueCount,
     currentlyLentCount,
     lendCount
@@ -39,19 +43,17 @@ const StudentDetail = ({
                         style={{ border: "none", background: "transparent", outline: "0" }}
                         value={inputValues["name"] || ""}
                         onChange={(e) => handleInputChange("name", e.target.value)}
-                        placeholder={studentData.name}
+                        placeholder={name}
                     />
                 ) : (
-                    <h1 className="text-4xl font-bold text-center text-[#F65867] flex-1">{studentData.name}</h1>
+                    <h1 className="text-4xl font-bold text-center text-[#F65867] flex-1">{name}</h1>
                 )}
                 <ActionButton
                     id={id}
-                    handleEdit={handleEdit}
-                    handleCloseEdit={handleCloseEdit}
-                    inputValue={inputValues || ""}
-                    page="student"
-                    url="/student"
-                    editDelete
+                    action={handleEdit}
+                    url={"student"}
+                    hasEditButton
+                    hasDelButton
                 />
             </div>
             <div className="grid lg:grid-cols-3 grid-cols-1 lg:my-10 my-5 place-items-center lg:gap-10 gap-5 lg:text-left text-center">
@@ -73,10 +75,10 @@ const StudentDetail = ({
                                 style={{ border: "none", background: "transparent", outline: "0" }}
                                 value={inputValues["studentId"] || ""}
                                 onChange={(e) => handleInputChange("studentId", e.target.value)}
-                                placeholder={studentData.studentId}
+                                placeholder={studentId}
                             />
                         ) : (
-                            <p>{studentData.studentId}</p>
+                            <p>{studentId}</p>
                         )}
                     </div>
                     <div className="">
@@ -89,10 +91,10 @@ const StudentDetail = ({
                                 style={{ border: "none", background: "transparent", outline: "0" }}
                                 value={inputValues["email"] || ""}
                                 onChange={(e) => handleInputChange("email", e.target.value)}
-                                placeholder={studentData.email}
+                                placeholder={email}
                             />
                         ) : (
-                            <p>{studentData.email}</p>
+                            <p>{email}</p>
                         )}
                     </div>
                     <div className="">
@@ -105,17 +107,17 @@ const StudentDetail = ({
                                 style={{ border: "none", background: "transparent", outline: "0" }}
                                 value={inputValues["phone"] || ""}
                                 onChange={(e) => handleInputChange("phone", e.target.value)}
-                                placeholder={studentData.phone}
+                                placeholder={phone}
                             />
                         ) : (
-                            <p>{studentData.phone}</p>
+                            <p>{phone}</p>
                         )}
                     </div>
                 </div>
                 <div className="flex flex-col justify-between text-lg gap-3 w-full">
                     <div className="">
                         <p className="font-semibold dark:text-[#ffffffa9]">Total Books Lent</p>
-                        <p>{lendCount+currentlyLentCount}</p>
+                        <p>{lendCount + currentlyLentCount}</p>
                     </div>
                     <div className="">
                         <p className="font-semibold dark:text-[#ffffffa9]">Books Currently Lent</p>

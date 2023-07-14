@@ -6,7 +6,7 @@ import { MdSearchOff } from "react-icons/md"
 
 const SearchRes = ({ data,handleClick }) => {
     return (
-        <div className="absolute z-10 dark:bg-[#201C1D] bg-[#F9F9F9] w-[400px] rounded-lg  mt-2 shadow-md dark:shadow-[#353334]">
+        <div className="absolute z-20 dark:bg-[#201C1D] bg-[#F9F9F9] w-[400px] rounded-lg  mt-2 shadow-md dark:shadow-[#353334]">
             <ul className="flex flex-col gap-1">
                 {data?.students?.map(x => (
                     <li className="border-l-4 border-green-400 hover:bg-white hover:dark:bg-[#353334] transition p-3 rounded-sm">

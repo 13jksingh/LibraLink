@@ -9,12 +9,13 @@ const CustomButton = ({
     icon, // an icon component to show on the button
     style, // a string of class names to apply to the button
     feedback, // a boolean to indicate whether to show feedback icons or not
-    isSubmitButton // // a boolean to indicate whether it is of type submit
+    isSubmitButton, // // a boolean to indicate whether it is of type submit
+    needRefresh
 }) => {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
-    const router = useRouter()
+    const router = useRouter();
 
     const handleClick = async () => {
         setLoading(true);
@@ -23,7 +24,7 @@ const CustomButton = ({
         try {
             await action();
             setSuccess(true);
-            router.refresh();
+            needRefresh && router.refresh();
             setTimeout(() => {
                 setSuccess(false);
               }, 100);

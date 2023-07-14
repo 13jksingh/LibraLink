@@ -8,7 +8,8 @@ import CustomButton from "./CustomButton";
 const AddForm = ({
     itemTitle,
     title,
-    url
+    url,
+    vertical
 }) => {
     const { register, formState: { errors }, handleSubmit } = useForm({
         criteriaMode: "all"
@@ -60,26 +61,19 @@ const AddForm = ({
             {failure && <p className="text-red-400 text-sm">Error occoured, try again later</p>}
             <h1 className="text-xl font-bold px-4 py-2">{title}</h1>
             <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-                <div className="w-full grid xl:grid-cols-4 md:grid-cols-2 gap-2 text-lg py-4 pb-6 justify-items-center overflow-hidden">
+                <div className={`${vertical ? "" :"md:flex-row w-full"} flex flex-col gap-2 text-lg py-4 pb-6 justify-items-center `}>
                     {itemTitle.map((x) => (
                         <div className="flex flex-col items-center gap-2" key={x.key}>
-                            <div className="flex items-center gap-1">
+                            <div className="flex-auto flex items-center gap-1">
                                 <label htmlFor={x.label}>{x.icon}</label>
                                 <input
-                                    className="rounded-xl px-2 py-1 dark:bg-[#201C1D] bg-[#F9F9F9]"
+                                    className="w-full rounded-xl px-2 py-1 dark:bg-[#201C1D] bg-[#F9F9F9]"
                                     type={x.type}
                                     id={x.key}
                                     placeholder={x.label}
                                     {...register(x.key, {
                                         required: "This is required.",
-                                        pattern: {
-                                            value: x.type === "number" ? /^\d+$/ : /^[a-zA-Z]+$/,
-                                            message: x.type === "number" ? "This input is number only." : "This input is letter only.",
-                                        },
-                                        maxLength: {
-                                            value: 10,
-                                            message: "This input exceed maxLength.",
-                                        },
+                                        
                                     })}
                                 />
 

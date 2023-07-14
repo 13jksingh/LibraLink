@@ -2,11 +2,15 @@
 import { useState } from "react";
 import ActionButton from "@/app/components/actionButtons";
 const BookDetail = ({
-    bookData,
     id,
+    title,
+    author,
+    description,
+    bookCode,
+    copies,
     overdueCount,
     currentlyLentCount,
-    totalStudentsLent
+    lendCount
 }) => {
     const [edit, setEdit] = useState(false); // State to store the currently edited ID
     const [inputValues, setInputValues] = useState({}); // State to store the input values for each column
@@ -39,10 +43,10 @@ const BookDetail = ({
                         style={{ border: "none", background: "transparent", outline: "0" }}
                         value={inputValues["name"] || ""}
                         onChange={(e) => handleInputChange("name", e.target.value)}
-                        placeholder={bookData.title}
+                        placeholder={title}
                     />
                 ) : (
-                    <h1 className="text-4xl font-bold text-center text-[#F65867] flex-1">{bookData.title}</h1>
+                    <h1 className="text-4xl font-bold text-center text-[#F65867] flex-1">{title}</h1>
                 )}
                 <ActionButton
                     id={id}
@@ -63,10 +67,10 @@ const BookDetail = ({
                         style={{ border: "none", background: "transparent", outline: "0" }}
                         value={inputValues["description"] || ""}
                         onChange={(e) => handleInputChange("description", e.target.value)}
-                        placeholder={bookData.description}
+                        placeholder={description}
                     />
                 ) : (
-                    <p>{bookData.description}</p>
+                    <p>{description}</p>
                 )}
             </div>
             <div className="grid lg:grid-cols-3 grid-cols-1 lg:my-10 my-5 place-items-center lg:gap-10 gap-5 lg:text-left text-center">
@@ -88,10 +92,10 @@ const BookDetail = ({
                                 style={{ border: "none", background: "transparent", outline: "0" }}
                                 value={inputValues["code"] || ""}
                                 onChange={(e) => handleInputChange("code", e.target.value)}
-                                placeholder={bookData.code}
+                                placeholder={bookCode}
                             />
                         ) : (
-                            <p>{bookData.code}</p>
+                            <p>{bookCode}</p>
                         )}
                     </div>
                     <div className="">
@@ -104,10 +108,10 @@ const BookDetail = ({
                                 style={{ border: "none", background: "transparent", outline: "0" }}
                                 value={inputValues["author"] || ""}
                                 onChange={(e) => handleInputChange("author", e.target.value)}
-                                placeholder={bookData.author}
+                                placeholder={author}
                             />
                         ) : (
-                            <p>{bookData.author}</p>
+                            <p>{author}</p>
                         )}
                     </div>
                     <div className="">
@@ -120,17 +124,17 @@ const BookDetail = ({
                                 style={{ border: "none", background: "transparent", outline: "0" }}
                                 value={inputValues["copies"] || ""}
                                 onChange={(e) => handleInputChange("copies", e.target.value)}
-                                placeholder={bookData.copies}
+                                placeholder={copies}
                             />
                         ) : (
-                            <p>{bookData.copies}</p>
+                            <p>{copies}</p>
                         )}
                     </div>
                 </div>
                 <div className="flex flex-col justify-between text-lg gap-3 w-full">
                     <div className="">
                         <p className="font-semibold dark:text-[#ffffffa9]">Total Students Lent</p>
-                        <p>{totalStudentsLent+currentlyLentCount}</p>
+                        <p>{lendCount+currentlyLentCount}</p>
                     </div>
                     <div className="">
                         <p className="font-semibold dark:text-[#ffffffa9]">Books Currently Lent</p>

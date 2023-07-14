@@ -1,8 +1,10 @@
-import { getStudentData } from "../Functions/Student";
-import Card from "../components/card";
+// Components
+import DataTable from "../components/dataTable";
 import AddForm from "../components/form";
-
-import { StudentAttributesInfo, studentDataTitles } from "../constData";
+// Functions
+import { getStudentData } from "../Functions/Student";
+// Attributes
+import { StudentAttributesInfo } from "../constData";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -21,21 +23,24 @@ const Student = async (context) => {
                     url="student"
                 />
             </div>
-            <Card
-                listItems
-                buttonTitle="Export CSV"
-                items={studentData}
-                itemTitle={studentDataTitles}
-                paddingReq="20px"
-                headingBgColor
-                narrowColumns={["ID"]}
-                page="student"
-                url="/student"
-                pagination
-                prevLink={`/student?page=${page > 1 ? page - 1 : Math.ceil(totalItems / ITEMS_PER_PAGE)}`}
-                nextLink={`/student?page=${page < Math.ceil(totalItems / ITEMS_PER_PAGE) ? page + 1 : 1}`}
-                navigationText={`${(page - 1) * 10 + 1}-${Math.min((page - 1) * 10 + 10, totalItems)} of ${totalItems}`}
-            />
+            <div className="w-full rounded-xl dark:bg-[#353334] dark:text-white bg-white px-8 py-7 mb-6">
+                <DataTable
+                    columns={StudentAttributesInfo}
+                    data={studentData}
+                    scroable
+                    headBgDiffernt
+                    textBig
+                    textFontNormal
+                    actionCol 
+                    hasViewButton
+                    hasEditButton
+                    hasDelButton
+                    pagination
+                    prevLink={`/student?page=${page > 1 ? page - 1 : Math.ceil(totalItems / ITEMS_PER_PAGE)}`}
+                    nextLink={`/student?page=${page < Math.ceil(totalItems / ITEMS_PER_PAGE) ? page + 1 : 1}`}
+                    navigationText={`${(page - 1) * 10 + 1}-${Math.min((page - 1) * 10 + 10, totalItems)} of ${totalItems}`}
+                />
+            </div>
         </div>
     );
 }
