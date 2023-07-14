@@ -30,10 +30,30 @@ export async function POST(request) {
         const collection = db.collection('Book');
 
         const data = await request.json();
-        const result = await collection.insertOne(data);
-        // Return the inserted document
-        console.log(result);
-        return NextResponse.json(result);
+        // Check if any of the fields are not present
+        const book = await collection.findOne({
+            $or: [
+                {code: data.code},
+                {title: data.title},
+            ]
+        });
+        if (book) {
+            console.log(book);
+            // Return an error message with the repeated field
+            let repeatedField = "";
+            if (book.code === data.code) {
+                repeatedField = "Book Code";
+            } else if (book.title === data.title) {
+                repeatedField = "Title";
+            }
+            return NextResponse.json({error: `Book already exists with the same ${repeatedField}`},{status:409});
+        } else {
+            // Insert the document
+            const result = await collection.insertOne(data);
+            // Return the inserted document
+            console.log(result);
+            return NextResponse.json(result);
+        }
     } catch (e) {
         console.error(e);
     }

@@ -45,6 +45,9 @@ const AddForm = ({
                     setSuccess(false);
                 }, 1000);
             } else {
+                const error = await response.json();
+                // Display the error message
+                alert(error.error);
                 setFailure(true);
                 console.error("Form submission failed");
             }

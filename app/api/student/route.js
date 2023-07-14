@@ -20,6 +20,7 @@ export async function GET(request) {
         console.error(e);
     }
 }
+
 export async function POST(request) {
     try {
         const client = await clientPromise;
@@ -27,14 +28,41 @@ export async function POST(request) {
         const collection = db.collection('Student');
 
         const data = await request.json();
-        const result = await collection.insertOne(data);
-        // Return the inserted document
-        console.log(result);
-        return NextResponse.json(result);
+        // Check if any of the fields are not present
+        const person = await collection.findOne({
+            $or: [
+                {name: data.name},
+                {studentId: data.studentId},
+                {phone: data.phone},
+                {email: data.email}
+            ]
+        });
+        if (person) {
+            console.log(person);
+            // Return an error message with the repeated field
+            let repeatedField = "";
+            if (person.studentId === data.studentId) {
+                repeatedField = "Student Id";
+            } else if (person.name === data.name) {
+                repeatedField = "Name";
+            } else if (person.email === data.email) {
+                repeatedField = "Email";
+            } else if (person.phone === data.phone) {
+                repeatedField = "Phone Number";
+            }
+            return NextResponse.json({error: `Person already exists with the same ${repeatedField}`},{status:409});
+        } else {
+            // Insert the document
+            const result = await collection.insertOne(data);
+            // Return the inserted document
+            console.log(result);
+            return NextResponse.json(result);
+        }
     } catch (e) {
         console.error(e);
     }
 }
+
 
 export async function DELETE(request) {
     try {

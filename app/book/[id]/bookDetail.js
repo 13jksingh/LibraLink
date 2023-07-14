@@ -75,7 +75,8 @@ const BookDetail = ({
             </div>
             <div className="grid lg:grid-cols-3 grid-cols-1 lg:my-10 my-5 place-items-center lg:gap-10 gap-5 lg:text-left text-center">
                 <img
-                    src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQ5jkGmJAHBSEcZZeYQPq_ewFhYTC3J9_mJ2UIUwuqtqJ_NZS4n"
+                    src={`https://covers.openlibrary.org/b/isbn/${bookCode}-S.jpg`}
+                    // src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQ5jkGmJAHBSEcZZeYQPq_ewFhYTC3J9_mJ2UIUwuqtqJ_NZS4n"
                     width={200}
                     height={200}
                     alt="Picture of the author"
