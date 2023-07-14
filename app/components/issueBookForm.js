@@ -68,7 +68,7 @@ const IssueBookForm = ({ children, selectItem, id }) => {
         setLoading(false);
     };
     return (
-        <form method="POST" onSubmit={handleIssue} className="flex justify-center items-center gap-2">
+        <form method="POST" onSubmit={handleIssue} className="flex flex-wrap justify-center items-center gap-2">
             {children}
             <CustomButton
                 icon={loading ? (
