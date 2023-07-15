@@ -1,6 +1,7 @@
-import CustomButton from "./CustomButton";
+'use client'
 import ActionButton from "./actionButton";
 import Link from "next/dist/client/link";
+import { useState } from "react";
 import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from "react-icons/md"
 
 const truncateText = (text, limit) => text?.length > limit ? text.slice(0, limit) + "..." : text;
@@ -24,6 +25,20 @@ const DataTable = ({
     prevLink,
     navigationText
 }) => {
+    const [editId, setEditId] = useState("");
+    const [inputValues, setInputValues] = useState({});
+    const handleEditToggle = id => {
+        setEditId(prev => {
+            return prev === id ? "" : id;
+        });
+        setInputValues({});
+    }
+    const handleInputChange = (column, value) => {
+        setInputValues((prevInputValues) => ({
+            ...prevInputValues,
+            [column]: value,
+        }));
+    };
     return (
         <div className="flex flex-col">
             {pagination &&
@@ -62,7 +77,20 @@ const DataTable = ({
                                 {data.map(x => (
                                     <tr key={x._id} className={`${lightBorder ? "border-[#6b7280] dark:border-[#9ca3af] border-b" : "dark:border-[#201C1D] border-[#f0f0f0] border-b"} hover:dark:bg-[#201C1D] hover:bg-[#F9F9F9] transition `}>
                                         {columns.map(attr => (
-                                            <td key={x[attr.key]} className="break-words px-1  py-5">{truncateText(x[attr.key], truncateTextLimit)}</td>
+                                            <td key={x[attr.key]} className="break-words px-1  py-5">
+                                                {editId === x._id ?
+                                                    <input
+                                                        id={`myText-${x._id}-${attr.key}`}
+                                                        type="text"
+                                                        className="text-center w-full"
+                                                        style={{ border: "none", background: "transparent", outline: "0" }}
+                                                        value={inputValues[attr.key] || ""}
+                                                        onChange={(e) => handleInputChange(attr.key, e.target.value)}
+                                                        placeholder={x[attr.key]}
+                                                    /> :
+                                                    truncateText(x[attr.key], truncateTextLimit)
+                                                }
+                                            </td>
                                         ))}
                                         {actionCol &&
                                             <td><ActionButton
@@ -72,7 +100,11 @@ const DataTable = ({
                                                 hasViewButton={hasViewButton}
                                                 hasEditButton={hasEditButton}
                                                 hasDelButton={hasDelButton}
-                                                hasReturnedButton={hasReturnedButton} />
+                                                hasReturnedButton={hasReturnedButton}
+                                                handleEditToggle={handleEditToggle}
+                                                editId={editId}
+                                                editValues={inputValues}
+                                            />
                                             </td>}
                                     </tr>
                                 ))}

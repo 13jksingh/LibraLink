@@ -1,6 +1,7 @@
 'use client'
 import { useState } from "react";
-import ActionButton from "@/app/components/actionButtons";
+// import ActionButton from "@/app/components/actionButtons";
+import ActionButton from "@/app/components/actionButton";
 const BookDetail = ({
     id,
     title,
@@ -12,20 +13,14 @@ const BookDetail = ({
     currentlyLentCount,
     lendCount
 }) => {
-    const [edit, setEdit] = useState(false); // State to store the currently edited ID
-    const [inputValues, setInputValues] = useState({}); // State to store the input values for each column
-    const handleEdit = (id) => {
-        // Handle the edit action with the received id
-        console.log(`Edit clicked for ID: ${id}`);
-        setEdit(true); // Set the ID for the input boxes that should be visible
-    };
-    const handleCloseEdit = (id) => {
-        // Handle the edit action with the received id
-        console.log(`Edit closed for ID: ${id}`);
-        setEdit(null); // Set the ID for the input boxes that should be visible
+    const [editId, setEditId] = useState("");
+    const [inputValues, setInputValues] = useState({});
+    const handleEditToggle = id => {
+        setEditId(prev => {
+            return prev === id ? "" : id;
+        });
         setInputValues({});
-    };
-
+    }
     const handleInputChange = (column, value) => {
         setInputValues((prevInputValues) => ({
             ...prevInputValues,
@@ -35,7 +30,7 @@ const BookDetail = ({
     return (
         <div className="dark:bg-[#353334] bg-white py-4 pt-6 rounded-xl">
             <div className="flex flex-col lg:flex-row justify-center items-center gap-2 px-6">
-                {edit ? (
+                {editId===id ? (
                     <input
                         id={`myText-${id}-name`}
                         type="text"
@@ -50,16 +45,16 @@ const BookDetail = ({
                 )}
                 <ActionButton
                     id={id}
-                    handleEdit={handleEdit}
-                    handleCloseEdit={handleCloseEdit}
-                    inputValue={inputValues || ""}
-                    page="book"
-                    url="/book"
-                    editDelete
+                    url={"book"}
+                    hasEditButton
+                    hasDelButton
+                    handleEditToggle={handleEditToggle}
+                    editId={editId}
+                    editValues={inputValues}
                 />
             </div>
             <div className="px-16 py-3 text-center">
-                {edit ? (
+                {editId===id ? (
                     <input
                         id={`myText-${id}-phone`}
                         type="text"
@@ -85,7 +80,7 @@ const BookDetail = ({
                 <div className="flex flex-col justify-between text-lg gap-3 w-full">
                     <div className="">
                         <p className="font-semibold dark:text-[#ffffffa9]">Book Code</p>
-                        {edit ? (
+                        {editId===id ? (
                             <input
                                 id={`myText-${id}-studentId`}
                                 type="text"
@@ -101,7 +96,7 @@ const BookDetail = ({
                     </div>
                     <div className="">
                         <p className="font-semibold dark:text-[#ffffffa9]">Author</p>
-                        {edit ? (
+                        {editId===id ? (
                             <input
                                 id={`myText-${id}-email`}
                                 type="text"
@@ -117,7 +112,7 @@ const BookDetail = ({
                     </div>
                     <div className="">
                         <p className="font-semibold dark:text-[#ffffffa9]">Total Books</p>
-                        {edit ? (
+                        {editId===id ? (
                             <input
                                 id={`myText-${id}-copies`}
                                 type="number"

@@ -14,9 +14,10 @@ const ActionButton = ({
     hasEditButton,
     hasDelButton,
     hasReturnedButton,
+    handleEditToggle,
+    editId,
+    editValues
 }) => {
-    const [editId, setEditId] = useState(""); // State to store the currently edited ID
-    const [inputValues, setInputValues] = useState({}); // State to store the input values for each column
     const router = useRouter();
  
     const returnBook = async (id) => {
@@ -30,32 +31,20 @@ const ActionButton = ({
     };
 
     // Edit 
-    const handleToggleEdit = (id) => {
-        editId != "" ? setEditId("") : setEditId(id);
-        setInputValues({});
-    };
-
-    const handleInputChange = (column, value) => {
-        setInputValues((prevInputValues) => ({
-            ...prevInputValues,
-            [column]: value,
-        }));
-    };
-
-    const UpdateChanges = async (id) => {
+    const UpdateChanges = async (id,editValues) => {
         const response = await fetch(`/api/${url}?id=${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(inputValues)
+            body: JSON.stringify(editValues)
         });
         if (!response.ok) {
             throw new Error(`Failed to update ${url}`);
         }
         await response.json();
         await fetch("/api/revalidate");
-        handleToggleEdit();
+        handleEditToggle(id);
     }
 
     // Delete
@@ -72,21 +61,20 @@ const ActionButton = ({
 
     return (
         <div className="flex items-center justify-center gap-2 text-xl align-middle">
-            {editId != "" ?
+            {editId===id ?
                 <>
                     <CustomButton
-                        action={() => UpdateChanges(id)}
+                        action={() => UpdateChanges(id,editValues)}
                         icon={<AiOutlineSend />}
                         style="text-green-400 shadow-md border border-[#F9F9F9] dark:border-[#201C1D] p-1 rounded-md hover:border-[#78b9ff] transition"
                         feedback={true}
                         needRefresh
                     />
                     <CustomButton
-                        action={() => handleToggleEdit(id)}
+                        action={() => handleEditToggle(id)}
                         icon={<AiOutlineCloseCircle />}
                         style="text-red-400 shadow-md border border-[#F9F9F9] dark:border-[#201C1D] p-1 rounded-md hover:border-[#78b9ff] transition"
                         feedback={true}
-                        needRefresh
                     />
                 </>
                 : (
@@ -97,7 +85,6 @@ const ActionButton = ({
                                 icon={<AiOutlineEye />}
                                 style="text-green-400 shadow-md border border-[#F9F9F9] dark:border-[#201C1D] p-1 rounded-md hover:border-[#78b9ff] transition"
                                 feedback={true}
-                                needRefresh
                             />
                         }
                         {hasReturnedButton &&
@@ -110,11 +97,10 @@ const ActionButton = ({
                             />}
                         {hasEditButton &&
                             <CustomButton
-                                action={() => handleToggleEdit(id)}
+                                action={()=>handleEditToggle(id)}
                                 icon={<AiOutlineEdit />}
                                 style="text-blue-400 shadow-md border border-[#F9F9F9] dark:border-[#201C1D] p-1 rounded-md hover:border-[#78b9ff] transition"
                                 feedback={true}
-                                needRefresh
                             />}
                         {hasDelButton &&
                             <CustomButton
