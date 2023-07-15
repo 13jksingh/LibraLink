@@ -4,6 +4,8 @@ import { useState } from "react";
 import { ErrorMessage } from "@hookform/error-message"
 import { useRouter } from 'next/navigation'
 import CustomButton from "./CustomButton";
+import { BiLoaderCircle, BiErrorCircle } from "react-icons/bi";
+import { MdDone } from "react-icons/md";
 
 const AddForm = ({
     itemTitle,
@@ -64,7 +66,7 @@ const AddForm = ({
             {failure && <p className="text-red-400 text-sm">Error occoured, try again later</p>}
             <h1 className="text-xl font-bold px-4 py-2">{title}</h1>
             <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-                <div className={`${vertical ? "" :"md:flex-row w-full"} flex flex-col gap-2 text-lg py-4 pb-6 justify-items-center `}>
+                <div className={`${vertical ? "" : "md:flex-row w-full"} flex flex-col gap-2 text-lg py-4 pb-6 justify-items-center `}>
                     {itemTitle.map((x) => (
                         <div className="flex flex-col items-center gap-2" key={x.key}>
                             <div className="flex-auto flex items-center gap-1">
@@ -76,7 +78,7 @@ const AddForm = ({
                                     placeholder={x.label}
                                     {...register(x.key, {
                                         required: "This is required.",
-                                        
+
                                     })}
                                 />
 
@@ -97,7 +99,15 @@ const AddForm = ({
                 <div className="w-full text-center">
                     <CustomButton
                         action={onSubmit}
-                        icon="Submit"
+                        icon={loading ? (
+                            <BiLoaderCircle className="animate-spin text-xl" />
+                        ) : failure ? (
+                            <BiErrorCircle className="text-white text-xl" />
+                        ) : sucess ? (
+                            <MdDone className="text-green-300 text-xl" />
+                        ) : (
+                            "Submit"
+                        )}
                         style="bg-[#F65867] rounded-xl text-white px-10 py-1"
                         feedback={false}
                         isSubmitButton

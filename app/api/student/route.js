@@ -73,11 +73,16 @@ export async function DELETE(request) {
         const collection = db.collection('Student');
         const lendCollection = db.collection('Lend');
 
-        await Promise.all([
-            collection.deleteOne({ _id: deleteId }),
-            lendCollection.deleteMany({studentId:deleteId})
-        ])
-        return NextResponse.json({deleted:true});
+        const session = client.startSession();
+        await session.withTransaction(async () => {
+            // Perform the delete operations inside the transaction
+            const book = await collection.deleteOne({ _id: deleteId }, { session });
+            const lend = await lendCollection.deleteMany({ studentId: deleteId }, { session });
+            console.log(book, lend);
+        });
+        // End the session
+        await session.endSession();
+        return NextResponse.json({acknowledged: true});
     } catch (e) {
         console.error(e);
     }

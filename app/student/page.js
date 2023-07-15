@@ -26,7 +26,7 @@ const Student = async (context) => {
             <div className="w-full rounded-xl dark:bg-[#353334] dark:text-white bg-white px-8 py-7 mb-6">
                 <DataTable
                     columns={StudentAttributesInfo}
-                    data={studentData}
+                    data={studentData.map(item => JSON.parse(JSON.stringify(item)))}
                     scroable
                     headBgDiffernt
                     textBig
@@ -44,5 +44,4 @@ const Student = async (context) => {
         </div>
     );
 }
-
 export default Student;

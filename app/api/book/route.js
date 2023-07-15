@@ -60,27 +60,29 @@ export async function POST(request) {
 }
 
 export async function DELETE(request) {
-    // console.log(request);
     try {
-        //   const { id } = request.query; // Retrieve the student ID from the request query
         const id = request.nextUrl.searchParams.get('id');
         const deleteId = new ObjectId(id);
         const client = await clientPromise;
         const db = client.db("LibraLink");
         const collection = db.collection('Book');
-
         const lendCollection = db.collection('Lend');
 
-        const [book , lend] = await Promise.all([
-            collection.deleteOne({ _id: deleteId }),
-            lendCollection.deleteMany({ bookId: deleteId })
-        ])
-        console.log(book,lend);
-        return NextResponse.json({ book: book,lend:lend});
+        const session = client.startSession();
+        await session.withTransaction(async () => {
+            // Perform the delete operations inside the transaction
+            const book = await collection.deleteOne({ _id: deleteId }, { session });
+            const lend = await lendCollection.deleteMany({ bookId: deleteId }, { session });
+            console.log(book, lend);
+        });
+        // End the session
+        await session.endSession();
+        return NextResponse.json({acknowledged: true});
     } catch (e) {
         console.error(e);
     }
 }
+
 
 export async function PUT(request) {
     try {
