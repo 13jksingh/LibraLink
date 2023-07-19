@@ -12,6 +12,7 @@
     "@headlessui/react": "^1.7.15",
     "@hookform/error-message": "^2.0.1",
     "autoprefixer": "10.4.14",
+    "csv-stringify": "^6.4.0",
     "date-fns": "^2.30.0",
     "mongodb": "^5.6.0",
     "next": "13.4.4",

@@ -23,9 +23,10 @@ const StudentView = async ({ params: { id } }) => {
                         <IssueBook id={id.toString()} selectItem="book" />
                     </div>
                     <div className="w-full rounded-xl dark:bg-[#353334] dark:text-white bg-white px-8 py-7 mb-6">
+                        <h1 className="text-2xl font-semibold py-3">Issued Books</h1>
                         <DataTable
                             columns={lendAttributesInfoStudent.filter((attribute) => attribute.key !== "returnedDate")}
-                            data={data}
+                            data={data.map(item => JSON.parse(JSON.stringify(item)))}
                             url="lend"
                             scroable
                             headBgDiffernt
@@ -37,9 +38,10 @@ const StudentView = async ({ params: { id } }) => {
                         />
                     </div>
                     <div className="w-full rounded-xl dark:bg-[#353334] dark:text-white bg-white px-8 py-7 mb-6">
+                        <h1 className="text-2xl font-semibold py-3">Overdue Books</h1>
                         <DataTable
                             columns={lendAttributesInfoStudent.filter((attribute) => attribute.key !== "returnedDate")}
-                            data={overdueData}
+                            data={overdueData.map(item => JSON.parse(JSON.stringify(item)))}
                             url="lend"
                             scroable
                             headBgDiffernt
@@ -51,6 +53,7 @@ const StudentView = async ({ params: { id } }) => {
                         />
                     </div>
                     <div className="w-full rounded-xl dark:bg-[#353334] dark:text-white bg-white px-8 py-7 mb-6">
+                        <h1 className="text-2xl font-semibold py-3">Returned Books</h1>
                         <DataTable
                             columns={lendAttributesInfoStudent}
                             data={returnedData}

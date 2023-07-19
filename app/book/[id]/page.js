@@ -13,7 +13,6 @@ import { BiErrorCircle } from "react-icons/bi";
 const BookView = async ({ params: { id } }) => {
     const { data: bookData   } = await getParticularBook(id);
     const { data, overdueData, returnedData, count, overdueCount, retrunCount } = await getLendData({ bookId: id.toString() });
-    console.log(bookData);
     return (
         <>
             {bookData ?
@@ -23,9 +22,10 @@ const BookView = async ({ params: { id } }) => {
                         <IssueBook id={id} selectItem="student" />
                     </div>
                     <div className="w-full rounded-xl dark:bg-[#353334] dark:text-white bg-white px-8 py-7 mb-6">
+                        <h1 className="text-2xl font-semibold py-3">Issued Books</h1>
                         <DataTable
                             columns={lendAttributesInfoBook.filter((attribute) => attribute.key !== "returnedDate")}
-                            data={data}
+                            data={data.map(item => JSON.parse(JSON.stringify(item)))}
                             url="lend"
                             scroable
                             headBgDiffernt
@@ -37,9 +37,10 @@ const BookView = async ({ params: { id } }) => {
                         />
                     </div>
                     <div className="w-full rounded-xl dark:bg-[#353334] dark:text-white bg-white px-8 py-7 mb-6">
+                        <h1 className="text-2xl font-semibold py-3">Overdue Books</h1>                        
                         <DataTable
                             columns={lendAttributesInfoBook.filter((attribute) => attribute.key !== "returnedDate")}
-                            data={overdueData}
+                            data={overdueData.map(item => JSON.parse(JSON.stringify(item)))}
                             url="lend"
                             scroable
                             headBgDiffernt
@@ -51,9 +52,10 @@ const BookView = async ({ params: { id } }) => {
                         />
                     </div>
                     <div className="w-full rounded-xl dark:bg-[#353334] dark:text-white bg-white px-8 py-7 mb-6">
+                        <h1 className="text-2xl font-semibold py-3">Returned Books</h1>
                         <DataTable
                             columns={lendAttributesInfoBook}
-                            data={returnedData}
+                            data={returnedData.map(item => JSON.parse(JSON.stringify(item)))}
                             url="lend"
                             scroable
                             headBgDiffernt

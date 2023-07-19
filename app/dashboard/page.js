@@ -40,7 +40,7 @@ const Dashboard = async () => {
                     </div>
                     <DataTable
                         columns={StudentAttributesInfo}
-                        data={studentData}
+                        data={studentData.map(item => JSON.parse(JSON.stringify(item)))}
                         truncateTextLimit={15}
                         lightBorder
                         scroable
@@ -54,7 +54,7 @@ const Dashboard = async () => {
                     </div>
                     <DataTable
                         columns={BookAttributesInfo}
-                        data={bookData}
+                        data={bookData.map(item => JSON.parse(JSON.stringify(item)))}
                         truncateTextLimit={15}
                         lightBorder
                         scroable
@@ -67,7 +67,7 @@ const Dashboard = async () => {
                 <DataTable
                     heading="Issued Books"
                     columns={lendAttributesInfoDashboard}
-                    data={lendData}
+                    data={lendData.map(item => JSON.parse(JSON.stringify(item)))}
                     truncateTextLimit={15}
                     lightBorder
                     scroable
@@ -78,7 +78,7 @@ const Dashboard = async () => {
                 <DataTable
                     heading="Overdue Books"
                     columns={lendAttributesInfoDashboard}
-                    data={overdueData}
+                    data={overdueData.map(item => JSON.parse(JSON.stringify(item)))}
                     truncateTextLimit={15}
                     lightBorder
                     scroable
