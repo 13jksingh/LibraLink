@@ -25,7 +25,7 @@ const Book = async (context) => {
       <div className="w-full rounded-xl dark:bg-[#353334] dark:text-white bg-white px-8 py-7 mb-6">
         <DataTable
           columns={BookAttributesInfo}
-          data={bookData}
+          data={bookData.map(item => JSON.parse(JSON.stringify(item)))}
           url="book"
           truncateTextLimit={100}
           scroable
