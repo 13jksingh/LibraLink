@@ -4,6 +4,7 @@ import { FiBookOpen, FiSettings } from "react-icons/fi";
 import { HiOutlineUsers } from "react-icons/hi";
 import { GoSignOut } from "react-icons/go";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 const Sidebar = () => {
   return (
@@ -20,9 +21,9 @@ const Sidebar = () => {
       <Link href="/setting" className="rounded-md p-2 hover:bg-[#F65867] hover:text-white hover:scale-125">
         <FiSettings />
       </Link>
-      <Link href="/dashboard" className="rounded-md p-2 hover:bg-[#F65867] hover:text-white hover:scale-125">
+      <button onClick={signOut} className="rounded-md p-2 hover:bg-[#F65867] hover:text-white hover:scale-125">
         <GoSignOut />
-      </Link>
+      </button>
     </div>
   );
 };
