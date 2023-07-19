@@ -9,6 +9,8 @@ import { BookAttributesInfo, StudentAttributesInfo, lendAttributesInfoDashboard 
 import { getStudentData } from "../Functions/Student";
 import { getBookData } from "../Functions/Book";
 import { getLendData } from "../Functions/Lend";
+import { getServerSession } from "next-auth/next";
+import { options } from "../api/auth/[...nextauth]/options";
 // Icons 
 import { HiOutlineUsers } from "react-icons/hi"
 import { GiSandsOfTime } from "react-icons/gi"
@@ -17,6 +19,8 @@ import { LuLibrary } from "react-icons/lu"
 import DashboardForm from "../components/DashboardForm";
 
 const Dashboard = async () => {
+    // User detail
+    const session = await getServerSession(options);
     // Data fetch Students and Books
     const { data: studentData, count: totalStudents } = await getStudentData(1, 4);
     const { data: bookData, count: totalBooks } = await getBookData(1, 4);
@@ -24,7 +28,7 @@ const Dashboard = async () => {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold">Hey, <span className="text-[#F65867]">Jaskeerat!</span></h1>
+            <h1 className="text-3xl font-bold">Hey, <span className="text-[#F65867]">{session.user.name}!</span></h1>
             <Time />
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-6">
                 <SmallCard count={totalStudents} title="Total Students" icon={<HiOutlineUsers />} />

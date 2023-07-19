@@ -30,9 +30,9 @@ export const options = {
             user.role = "student";
             return true;
         },
-        async session(session, user) {
+        async session({session, token}) {
             // Attach additional session data, including the user's role
-            session.user.role = user.role;
+            session.user.role = token.role;
             return session;
         },
         async jwt({token, user}) {
