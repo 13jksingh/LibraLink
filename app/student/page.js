@@ -27,6 +27,7 @@ const Student = async (context) => {
                 <DataTable
                     columns={StudentAttributesInfo}
                     data={studentData.map(item => JSON.parse(JSON.stringify(item)))}
+                    url="student"
                     scroable
                     headBgDiffernt
                     textBig
