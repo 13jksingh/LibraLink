@@ -14,7 +14,7 @@ const DataTable = ({
     headBgDiffernt,
     textBig,
     textFontNormal,
-    url = "student",
+    url,
     actionCol,
     hasViewButton,
     hasEditButton,

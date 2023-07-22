@@ -91,14 +91,14 @@ export default async function Home() {
             />
           </div>
         </div> :
-        <div>
-          <LoginButtons login icon={
-            <div className="flex gap-1 bg-white rounded hover:bg-neutral-100 justify-center items-center px-5 py-2">
-              <FcGoogle />
-              <h1>Login</h1>
-            </div>
-          } />
-        </div>
+          <div className="w-1/3 text-center rounded-xl dark:bg-[#353334] dark:text-white bg-white px-8 py-7 mb-6">
+            <LoginButtons login icon={
+              <div className="w-full text-xl flex justify-between rounded hover:bg-neutral-100 items-center px-5 py-2">
+                <FcGoogle />
+                <h1 className="text-[#F65867]">Login</h1>
+              </div>
+            } />
+          </div>
       }
     </div>
   )
