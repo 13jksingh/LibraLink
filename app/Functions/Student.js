@@ -48,3 +48,16 @@ export async function getParticularStudent(id) {
     throw new Error('Failed to fetch data');
   }
 }
+
+export async function getParticularStudentByEmail(email) {
+  try {
+    const collection = await connectStudentDb(); // Assuming this function establishes the database connection
+    const documents = await collection.findOne({ email : email });
+    return {
+      data: documents
+    }
+  } catch (e) {
+    console.log(e);
+    throw new Error('Failed to fetch data');
+  }
+}

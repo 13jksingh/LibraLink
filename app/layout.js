@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
           <Navbar />
           <div className="flex">
             <Sidebar />
-            <div className="dark:bg-[#201C1D] bg-[#F9F9F9] md:rounded-tl-3xl w-screen px-10 py-20 h-auto">
+            <div className="dark:bg-[#201C1D] bg-[#F9F9F9] md:rounded-tl-3xl w-screen px-10 py-20 h-min-screen">
               {children}
             </div>
           </div>
